@@ -42,7 +42,7 @@ export interface WebhookPayload {
   thread_name?: string;
   /** Message flags: 4 SUPPRESS_EMBEDS, 4096 SUPPRESS_NOTIFICATIONS. */
   flags?: number;
-  allowed_mentions?: { parse: Array<"everyone" | "roles" | "users"> };
+  allowed_mentions?: { parse: Array<"everyone" | "roles" | "users">; roles?: string[]; users?: string[]; replied_user?: boolean };
 }
 
 /** Flat inputs accepted by the CLI, the TUI and the MCP tool. */
@@ -263,4 +263,61 @@ export function parseEmbedArgument(value: string, read: (path: string) => string
   if (!data || typeof data !== "object" || Array.isArray(data)) throw error.usage("--embed expects a JSON object.");
   const normalized = normalizePayload({ embeds: [data] });
   return normalized.embeds![0]!;
+}
+
+/** Local defaults from settings.json, applied only when nothing else sets the field. */
+export interface SendDefaults {
+  username?: string;
+  avatarUrl?: string;
+}
+
+const EMBED_KEYS: ReadonlyArray<keyof MessageInput> = [
+  "title", "description", "url", "color", "timestamp", "author", "authorUrl", "authorIcon",
+  "footer", "footerIcon", "image", "thumbnail",
+];
+
+/**
+ * Builds the final body shared by the CLI and the MCP tool.
+ *
+ * Without a base payload it is `buildPayload` plus the local defaults. With
+ * a base payload (a JSON file or object given by a person or an agent):
+ * - identity: explicit option, then the base payload, then the local default;
+ * - `content` and `thread_name` from the options replace the base ones;
+ * - `tts` is on when either side turns it on;
+ * - `flags` are combined bit by bit;
+ * - embeds from the options are appended after the base embeds, and embed
+ *   options without content of their own (only a color, for example) raise
+ *   USAGE instead of being dropped;
+ * - mentions stay off (`{ parse: [] }`) unless `allowMentions`, even when the
+ *   base payload enables them; with `allowMentions`, the base object wins
+ *   when present, so a payload can narrow mentions to given roles or users.
+ */
+export function composePayload(base: WebhookPayload | undefined, input: MessageInput, defaults: SendDefaults = {}): WebhookPayload {
+  if (!base) {
+    return buildPayload({ ...input, username: input.username ?? defaults.username, avatarUrl: input.avatarUrl ?? defaults.avatarUrl });
+  }
+  const hasEmbedOptions = EMBED_KEYS.some((key) => input[key] !== undefined && input[key] !== "") || Boolean(input.fields?.length);
+  let built: WebhookPayload = {};
+  if (hasEmbedOptions || input.embeds?.length) {
+    built = buildPayload({ ...input, content: undefined, username: undefined, avatarUrl: undefined, threadName: undefined });
+  }
+  const payload: WebhookPayload = { ...base };
+  if (input.content) payload.content = input.content.replace(/\\n/g, "\n");
+  const username = input.username ?? base.username ?? defaults.username;
+  if (username) payload.username = username;
+  const avatar = input.avatarUrl ?? base.avatar_url ?? defaults.avatarUrl;
+  if (avatar) payload.avatar_url = buildPayload({ content: ".", avatarUrl: avatar }).avatar_url;
+  if (input.tts || base.tts) payload.tts = true;
+  if (input.threadName) payload.thread_name = input.threadName;
+  const flags = (typeof base.flags === "number" ? base.flags : 0) | (input.silent ? 4096 : 0) | (input.suppressEmbeds ? 4 : 0);
+  if (flags) payload.flags = flags;
+  else delete payload.flags;
+  const embeds = [...(base.embeds ?? []), ...(built.embeds ?? [])];
+  if (embeds.length) payload.embeds = embeds;
+  else delete payload.embeds;
+  payload.allowed_mentions = input.allowMentions
+    ? (base.allowed_mentions ?? { parse: ["everyone", "roles", "users"] })
+    : { parse: [] };
+  validatePayload(payload);
+  return payload;
 }

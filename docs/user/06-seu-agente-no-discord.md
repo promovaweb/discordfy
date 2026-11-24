@@ -161,6 +161,20 @@ máquina com:
 npx skills add promovaweb/discordfy
 ```
 
+A skill é uma só, `discordfy`, com um arquivo principal e oito referências
+que o agente abre conforme a tarefa:
+
+| Referência | Assunto |
+| --- | --- |
+| `instalacao.md` | binário, MCP nos clientes e a própria skill |
+| `webhooks.md` | criar o webhook no Discord, cadastrar, testar, editar e trocar uma URL vazada |
+| `mensagens.md` | cada elemento da notificação e os limites do Discord |
+| `payload.md` | JSON pronto, vários embeds, tópicos e fóruns |
+| `mcp.md` | argumentos e respostas de cada tool |
+| `receitas.md` | modelos de deploy, falha, release, PR, incidente, relatório e tarefa concluída |
+| `automacoes.md` | GitHub Actions, GitLab CI, hooks do Git, cron e scripts |
+| `erros.md` | exit codes, mensagens de erro e diagnóstico |
+
 A skill complementa o servidor MCP. Sem MCP configurado, o agente ainda
 consegue usar o Discordfy pelo terminal, chamando `discordfy send` com
 `--json` e lendo o envelope de resposta. Com os dois instalados, ele tem as

@@ -14,7 +14,7 @@ import { ExitCode } from "../../app/exit-codes.ts";
 import { error } from "../../app/errors.ts";
 import { getWebhookUrl, validateChannel } from "../../discord/webhooks.ts";
 import { sendMessage } from "../../discord/api.ts";
-import { buildPayload, normalizePayload, parseEmbedArgument, parseField, validatePayload, type EmbedField, type MessageInput, type WebhookPayload } from "../../discord/message.ts";
+import { composePayload, normalizePayload, parseEmbedArgument, parseField, type EmbedField, type MessageInput, type WebhookPayload } from "../../discord/message.ts";
 import { getPath, readSettings } from "../../config/settings.ts";
 import { readStdin } from "../input.ts";
 import { color } from "../format.ts";
@@ -48,13 +48,16 @@ async function loadPayload(source: string): Promise<WebhookPayload> {
   } catch {
     throw error.notFound(`Could not read the payload file "${source}".`, { file: source });
   }
+  let data: unknown;
   try {
-    const data = JSON.parse(text);
-    if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error();
-    return normalizePayload(data as Record<string, unknown>);
+    data = JSON.parse(text);
   } catch {
-    throw error.usage(`The payload "${source}" is not a JSON object with Discord webhook fields (content, embeds...).`);
+    throw error.usage(`The payload "${source}" is not valid JSON.`, { file: source });
   }
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    throw error.usage(`The payload "${source}" must be a JSON object with Discord webhook fields (content, embeds...).`, { file: source });
+  }
+  return normalizePayload(data as Record<string, unknown>);
 }
 
 export const sendCommand: Command = {
@@ -113,8 +116,8 @@ export const sendCommand: Command = {
     const defaults = sendDefaults();
     const input: MessageInput = {
       content: content || undefined,
-      username: str(o, "username") ?? defaults.username,
-      avatarUrl: str(o, "avatar-url") ?? defaults.avatarUrl,
+      username: str(o, "username"),
+      avatarUrl: str(o, "avatar-url"),
       tts: o.tts === true,
       title: str(o, "title"),
       description: str(o, "description"),
@@ -136,18 +139,8 @@ export const sendCommand: Command = {
       suppressEmbeds: o["suppress-embeds"] === true,
     };
 
-    let payload: WebhookPayload;
     const source = str(o, "payload");
-    if (source) {
-      const base = await loadPayload(source);
-      const flat = buildPayloadSafe(input);
-      payload = { ...base, ...stripEmpty(flat), embeds: [...(base.embeds ?? []), ...(flat.embeds ?? [])] };
-      if (!payload.embeds?.length) delete payload.embeds;
-      if (!o["allow-mentions"] && base.allowed_mentions) payload.allowed_mentions = base.allowed_mentions;
-      validatePayload(payload);
-    } else {
-      payload = buildPayload(input);
-    }
+    const payload: WebhookPayload = composePayload(source ? await loadPayload(source) : undefined, input, defaults);
 
     const threadId = str(o, "thread-id");
     if (o["dry-run"] === true) {
@@ -164,29 +157,6 @@ export const sendCommand: Command = {
     };
   },
 };
-
-/** Builds a payload from flags without requiring content (the file may carry it). */
-function buildPayloadSafe(input: MessageInput): WebhookPayload {
-  const hasFlat = input.content || input.title || input.description || input.fields?.length || input.image || input.author || input.embeds?.length;
-  if (!hasFlat) {
-    const p: WebhookPayload = {};
-    if (input.username) p.username = input.username;
-    if (input.avatarUrl) p.avatar_url = input.avatarUrl;
-    if (input.tts) p.tts = true;
-    if (input.threadName) p.thread_name = input.threadName;
-    const flags = (input.silent ? 4096 : 0) | (input.suppressEmbeds ? 4 : 0);
-    if (flags) p.flags = flags;
-    p.allowed_mentions = { parse: input.allowMentions ? ["everyone", "roles", "users"] : [] };
-    return p;
-  }
-  return buildPayload(input);
-}
-
-function stripEmpty(payload: WebhookPayload): WebhookPayload {
-  const copy = { ...payload };
-  delete copy.embeds;
-  return copy;
-}
 
 function readEmbedFile(path: string): string {
   try {

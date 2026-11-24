@@ -87,3 +87,25 @@ describe("mcp discord tools", () => {
     expect(data(r).webhook.name).toBe("Agente");
   });
 });
+
+describe("mcp review fixes", () => {
+  test("extra embeds are normalized and dry run validates the channel and keeps the thread", async () => {
+    const r = await client.callTool({ name: "discord_send", arguments: { channel: "time-dev", embeds: [{ title: "x", color: "green", type: "rich" }], thread_id: "42", dry_run: true } });
+    const d = data(r);
+    expect(d.payload.embeds[0].color).toBe(0x57f287);
+    expect(d.payload.embeds[0].type).toBeUndefined();
+    expect(d.threadId).toBe("42");
+    const bad = await client.callTool({ name: "discord_send", arguments: { channel: "_bad", content: "oi", dry_run: true } });
+    expect(bad.isError).toBe(true);
+  });
+
+  test("payload mentions are off unless allow_mentions", async () => {
+    const r = await client.callTool({ name: "discord_send", arguments: { channel: "time-dev", payload: { content: "@everyone", allowed_mentions: { parse: ["everyone"] } }, dry_run: true } });
+    expect(data(r).payload.allowed_mentions).toEqual({ parse: [] });
+  });
+
+  test("webhook_edit refuses avatar_url with remove_avatar", async () => {
+    const r = await client.callTool({ name: "webhook_edit", arguments: { channel: "time-dev", avatar_url: "https://x.io/a.png", remove_avatar: true } });
+    expect(r.isError).toBe(true);
+  });
+});

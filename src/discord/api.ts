@@ -137,7 +137,7 @@ export async function avatarDataUri(source: string): Promise<string> {
     try {
       response = await fetch(source, { signal: AbortSignal.timeout(TIMEOUT_MS) });
     } catch {
-      throw error.network(`Could not download the avatar from ${source}.`);
+      throw error.network("Could not download the avatar image.");
     }
     if (!response.ok) throw error.network(`The avatar URL answered HTTP ${response.status}.`);
     type = response.headers.get("content-type")?.split(";")[0]?.trim();

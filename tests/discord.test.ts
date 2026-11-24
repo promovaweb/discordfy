@@ -197,3 +197,35 @@ describe("parser", () => {
     expect(JSON.parse(r.stdout).data.payload.content).toBe("from stdin");
   });
 });
+
+describe("payload composition (review fixes)", () => {
+  test("a payload cannot enable mentions without --allow-mentions", async () => {
+    const r = await run(["send", "x", "--payload", "-", "--dry-run", "--json"], '{"content":"@everyone","allowed_mentions":{"parse":["everyone"]}}');
+    expect(JSON.parse(r.stdout).data.payload.allowed_mentions).toEqual({ parse: [] });
+    const allowed = await run(["send", "x", "--payload", "-", "--allow-mentions", "--dry-run", "--json"], '{"content":"<@&1>","allowed_mentions":{"parse":[],"roles":["1"]}}');
+    expect(JSON.parse(allowed.stdout).data.payload.allowed_mentions).toEqual({ parse: [], roles: ["1"] });
+  });
+
+  test("identity: option, then payload, then local default; flags are combined", async () => {
+    expect((await run(["config", "set", "send.username", "LOCAL"])).code).toBe(0);
+    const fromFile = await run(["send", "x", "--payload", "-", "--dry-run", "--json"], '{"content":"oi","username":"arquivo"}');
+    expect(JSON.parse(fromFile.stdout).data.payload.username).toBe("arquivo");
+    const fromDefault = await run(["send", "x", "--payload", "-", "--dry-run", "--json"], '{"content":"oi"}');
+    expect(JSON.parse(fromDefault.stdout).data.payload.username).toBe("LOCAL");
+    const flags = await run(["send", "x", "--payload", "-", "--silent", "--dry-run", "--json"], '{"content":"x","flags":4}');
+    expect(JSON.parse(flags.stdout).data.payload.flags).toBe(4100);
+    await run(["config", "unset", "send.username"]);
+  });
+
+  test("decoration options without embed content are refused, not dropped", async () => {
+    const r = await run(["send", "x", "--payload", "-", "--color", "red", "--dry-run", "--json"], '{"embeds":[{"title":"A"}]}');
+    expect(r.code).toBe(2);
+  });
+
+  test("payload errors are specific", async () => {
+    const notObject = await run(["send", "x", "--payload", "-", "--dry-run", "--json"], '{"embeds":{}}');
+    expect(JSON.parse(notObject.stdout).error.message).toContain("`embeds` must be an array");
+    const invalid = await run(["send", "x", "--payload", "-", "--dry-run", "--json"], "{oops");
+    expect(JSON.parse(invalid.stdout).error.message).toContain("not valid JSON");
+  });
+});

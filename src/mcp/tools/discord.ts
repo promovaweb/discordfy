@@ -9,9 +9,9 @@
  */
 import { z } from "zod";
 import { AppError } from "../../app/errors.ts";
-import { getWebhookUrl, listWebhooks } from "../../discord/webhooks.ts";
+import { getWebhookUrl, listWebhooks, validateChannel } from "../../discord/webhooks.ts";
 import { avatarDataUri, modifyWebhook, sendMessage, webhookInfo } from "../../discord/api.ts";
-import { buildPayload, normalizePayload, validatePayload, type Embed, type MessageInput, type WebhookPayload } from "../../discord/message.ts";
+import { composePayload, normalizePayload, type WebhookPayload } from "../../discord/message.ts";
 import { sendDefaults } from "../../cli/commands/send.ts";
 import type { Registrar } from "../server.ts";
 
@@ -81,6 +81,7 @@ export function registerDiscordTools({ server, catalog }: Registrar): void {
     async ({ channel, name, avatar_url, remove_avatar }) => {
       try {
         if (!name && !avatar_url && !remove_avatar) throw new AppError(2, "Give name, avatar_url or remove_avatar.");
+        if (avatar_url && remove_avatar) throw new AppError(2, "Use avatar_url or remove_avatar, not both.");
         if (name && /discord|clyde/i.test(name)) throw new AppError(2, "Discord rejects names containing discord or clyde.");
         const profile = { ...(name ? { name } : {}), ...(avatar_url ? { avatar: await avatarDataUri(avatar_url) } : {}), ...(remove_avatar ? { avatar: null } : {}) };
         const webhook = await modifyWebhook(getWebhookUrl(channel), profile);
@@ -128,8 +129,8 @@ export function registerDiscordTools({ server, catalog }: Registrar): void {
     },
     async (args) => {
       try {
-        const defaults = sendDefaults();
-        const payload: WebhookPayload = merge(args.payload, {
+        const channel = validateChannel(args.channel);
+        const payload: WebhookPayload = composePayload(args.payload ? normalizePayload(args.payload) : undefined, {
           content: args.content,
           title: args.title,
           description: args.description,
@@ -144,18 +145,18 @@ export function registerDiscordTools({ server, catalog }: Registrar): void {
           image: args.image,
           thumbnail: args.thumbnail,
           timestamp: args.timestamp,
-          embeds: args.embeds as Embed[] | undefined,
-          username: args.username ?? defaults.username,
-          avatarUrl: args.avatar_url ?? defaults.avatarUrl,
+          embeds: args.embeds?.length ? normalizePayload({ embeds: args.embeds }).embeds : undefined,
+          username: args.username,
+          avatarUrl: args.avatar_url,
           tts: args.tts,
           threadName: args.thread_name,
           silent: args.silent,
           suppressEmbeds: args.suppress_embeds,
           allowMentions: args.allow_mentions,
-        });
-        if (args.dry_run) return ok({ channel: args.channel, dryRun: true, payload });
-        const message = await sendMessage(getWebhookUrl(args.channel), payload, { threadId: args.thread_id });
-        return ok({ channel: args.channel, sent: true, message });
+        }, sendDefaults());
+        if (args.dry_run) return ok({ channel, dryRun: true, payload, ...(args.thread_id ? { threadId: args.thread_id } : {}) });
+        const message = await sendMessage(getWebhookUrl(channel), payload, { threadId: args.thread_id });
+        return ok({ channel, sent: true, message });
       } catch (e) {
         return fail(e);
       }
@@ -163,16 +164,3 @@ export function registerDiscordTools({ server, catalog }: Registrar): void {
   );
 }
 
-/** Merges a raw body with the flat arguments, then validates the result. */
-function merge(raw: Record<string, unknown> | undefined, input: MessageInput): WebhookPayload {
-  if (!raw) return buildPayload(input);
-  const base = normalizePayload(raw);
-  const flat = input.content || input.title || input.description || input.fields?.length || input.image || input.author || input.embeds?.length;
-  const built: WebhookPayload = flat ? buildPayload(input) : buildPayload({ ...input, content: "\u200b" });
-  if (!flat) delete built.content;
-  const payload: WebhookPayload = { ...base, ...built, embeds: [...(base.embeds ?? []), ...(built.embeds ?? [])] };
-  if (!payload.embeds?.length) delete payload.embeds;
-  if (!input.allowMentions && base.allowed_mentions) payload.allowed_mentions = base.allowed_mentions;
-  validatePayload(payload);
-  return payload;
-}

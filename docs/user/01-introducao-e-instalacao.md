@@ -41,7 +41,7 @@ uma mudança feita na TUI vale para o próximo `send` no terminal.
 
 ## Instalar o binário
 
-A versão 0.1.3 é distribuída de três formas. Escolha a que combina com a
+A versão 0.1.4 é distribuída de três formas. Escolha a que combina com a
 máquina:
 
 | Forma | Comando ou local | Quando usar |
@@ -57,8 +57,8 @@ um executável por plataforma: `discordfy-linux-x64`, `discordfy-linux-arm64`,
 download. No Linux, o caminho manual fica assim:
 
 ```bash
-curl -fsSLO https://github.com/promovaweb/discordfy/releases/download/v0.1.3/discordfy-linux-x64
-curl -fsSLO https://github.com/promovaweb/discordfy/releases/download/v0.1.3/SHA256SUMS
+curl -fsSLO https://github.com/promovaweb/discordfy/releases/download/v0.1.4/discordfy-linux-x64
+curl -fsSLO https://github.com/promovaweb/discordfy/releases/download/v0.1.4/SHA256SUMS
 sha256sum --check --ignore-missing SHA256SUMS
 chmod +x discordfy-linux-x64
 sudo mv discordfy-linux-x64 /usr/local/bin/discordfy
@@ -80,7 +80,7 @@ discordfy about
 discordfy doctor
 ```
 
-O `--version` imprime `discordfy 0.1.3`. O `about` mostra o executável, o
+O `--version` imprime `discordfy 0.1.4`. O `about` mostra o executável, o
 runtime e a plataforma. O `doctor` confere terminal, permissões de `~/.discordfy/`,
 `settings.json`, origem da master key e leitura do cofre, sem gravar nenhum
 arquivo. Numa máquina nova, o cofre ainda não existe e o `doctor` informa

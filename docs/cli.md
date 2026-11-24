@@ -132,10 +132,20 @@ nome: `blurple`, `green`, `success`, `yellow`, `warning`, `red`, `error`,
 As menções saem desligadas (`allowed_mentions.parse = []`): o texto mostra
 `@everyone` e cargos, mas ninguém é notificado sem `--allow-mentions`.
 
-Com `--payload`, as options da linha de comando sobrescrevem os campos do topo
-do arquivo e acrescentam embeds. Campos que webhooks não podem definir
-(`type`, `provider`, `video`, dimensões de imagem) são descartados. O
-exemplo completo do Embed Visualizer está em `examples/embed-visualizer.json`.
+Com `--payload`, a composição segue regras fixas, iguais no MCP: o nome e o
+avatar vêm da option, depois do arquivo e por último de `send.username` e
+`send.avatarUrl`; texto e `--thread-name` da option substituem os do
+arquivo; `--tts` liga a leitura mesmo que o arquivo não ligue; as flags
+(`--silent`, `--suppress-embeds`) somam-se às `flags` do arquivo; os embeds
+das options entram depois dos embeds do arquivo. Uma option de embed sem
+conteúdo próprio (só `--color`, por exemplo) sai com exit code 2: para mudar a
+cor de um embed do arquivo, edite o arquivo. Sem `--allow-mentions`, as
+menções ficam desligadas mesmo que o arquivo as ligue; com a flag, o
+`allowed_mentions` do arquivo prevalece quando existe, o que permite liberar
+só um cargo (`{"parse":[],"roles":["<id>"]}` e `<@&id>` no texto). Campos que
+webhooks não podem definir (`type`, `provider`, `video`, dimensões de
+imagem) são descartados. O exemplo completo do Embed Visualizer está em
+`examples/embed-visualizer.json`.
 
 Antes de chamar o Discord, `send` confere os limites: texto 2000, 10 embeds,
 título 256, descrição 4096, 25 campos de 256 e 1024, rodapé 2048, autor 256,

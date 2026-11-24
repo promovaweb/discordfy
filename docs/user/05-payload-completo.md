@@ -58,10 +58,21 @@ A forma `--payload=-` tem o mesmo efeito.
 
 ## Options por cima do payload
 
-As options da linha de comando se combinam com o arquivo. Os campos de topo
-informados por option, como `--username`, `--avatar-url`, `--tts` e `--silent`,
-substituem os do arquivo. Os embeds montados por `--title`, `--field` e
-`--embed` são acrescentados depois dos embeds do arquivo, sem apagá-los:
+As options da linha de comando se combinam com o arquivo assim:
+
+- nome e avatar: a option vale primeiro, depois o arquivo e por último os
+  padrões `send.username` e `send.avatarUrl`;
+- texto e `--thread-name` da option substituem os do arquivo;
+- `--tts` liga a leitura em voz alta mesmo que o arquivo não ligue;
+- `--silent` e `--suppress-embeds` somam-se às `flags` do arquivo;
+- os embeds montados por `--title`, `--field` e `--embed` entram depois dos
+  embeds do arquivo, sem apagá-los.
+
+Uma option de embed sozinha, como `--color` sem título nem descrição, é
+recusada com exit code 2. Para mudar a cor de um embed do arquivo, edite o
+arquivo.
+
+Exemplo:
 
 ```bash
 discordfy send deploys --payload=modelo-deploy.json \
@@ -74,10 +85,11 @@ que muda a cada execução. Confira o resultado com `--dry-run` antes de
 publicar o modelo para o time usar.
 
 As menções seguem a mesma proteção do restante do binário. Sem
-`--allow-mentions`, a mensagem sai com as menções desligadas, a não ser que o
-próprio arquivo declare `allowed_mentions`. Nesse caso, o valor do arquivo é
-preservado, porque o autor do modelo já escolheu os cargos e as pessoas que
-podem ser notificados.
+`--allow-mentions`, a mensagem sai com as menções desligadas, mesmo que o
+arquivo declare `allowed_mentions`. Com a flag, o `allowed_mentions` do
+arquivo prevalece quando existe. Assim um modelo pode liberar só um cargo:
+`{"parse": [], "roles": ["<id do cargo>"]}` no arquivo e `<@&id do cargo>` no
+texto.
 
 ## O campo legado embed
 

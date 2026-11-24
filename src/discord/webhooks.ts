@@ -150,7 +150,10 @@ export function renameWebhook(from: string, to: string): { from: string; to: str
   const target = validateChannel(to);
   const all = vault();
   const url = all[`${WEBHOOK_PREFIX}${source}`];
-  if (url === undefined) throw error.notFound(`No webhook saved for channel "${source}".`, { channel: source });
+  if (url === undefined) {
+    const known = Object.keys(all).filter((k) => k.startsWith(WEBHOOK_PREFIX)).map((k) => k.slice(WEBHOOK_PREFIX.length)).sort();
+    throw error.notFound(`No webhook saved for channel "${source}".`, { channel: source, known });
+  }
   if (`${WEBHOOK_PREFIX}${target}` in all) throw error.usage(`Channel "${target}" already exists.`, { channel: target });
   delete all[`${WEBHOOK_PREFIX}${source}`];
   all[`${WEBHOOK_PREFIX}${target}`] = url;

@@ -33,7 +33,11 @@ icon_url? }`), `image`, `thumbnail`, `timestamp` (`now` ou ISO 8601),
 `embeds` (objetos de embed crus), `username`, `avatar_url`, `tts`,
 `thread_id`, `thread_name`, `silent`, `suppress_embeds`, `allow_mentions`,
 `payload` (corpo completo do webhook, aceita `embed` no singular) e
-`dry_run`. Os limites do Discord são conferidos antes da chamada; um erro
+`dry_run`. A composição com `payload` segue as mesmas regras do `--payload`
+do CLI (ver o topic `cli`): menções desligadas sem `allow_mentions`, flags
+somadas e embeds de `embeds` normalizados e acrescentados. O `dry_run`
+confere o nome do canal e devolve `threadId` quando informado, mas não
+confere se o canal está cadastrado; use `webhooks_list` ou `webhook_test`. Os limites do Discord são conferidos antes da chamada; um erro
 volta com `isError: true` e `{ error: { code, name, message, details } }`.
 
 Nenhuma tool devolve a URL do webhook nem o token. Cadastrar, trocar,
