@@ -8,7 +8,7 @@ Times que conversam no Discord querem saber quando um deploy termina, um
 build quebra ou um agente de IA conclui uma tarefa. O webhook do canal
 resolve o envio, mas a URL dele carrega um token e acaba colada em scripts,
 arquivos `.env` e históricos de shell. O Discordfy guarda cada webhook cifrado
-com um nome curto de canal e envia mensagens ricas (texto, embeds, campos,
+com um nome curto de canal e envia notificações ricas (texto, embeds, campos,
 imagens) sempre para um canal nomeado. A mesma base atende a pessoa no
 terminal, os scripts de CI e os agentes, que reportam o próprio trabalho no
 canal do time pelo MCP e pela skill `discordfy`.

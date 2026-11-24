@@ -327,7 +327,7 @@ async function build(version, sources, pages) {
     "-geometry", "+150+170", "-composite", "-font", bodyFont, "-fill", "#171717", "-pointsize", "34",
     "-annotate", "+150+850", "DISCORDFY", "-font", sansFont, "-fill", "#00161E", "-pointsize", "116",
     "-annotate", "+150+1050", "Guia do", "-annotate", "+150+1190", "Usuário",
-    "-font", bodyFont, "-fill", "#4752C4", "-pointsize", "42", "-annotate", "+150+1400", "Seu agente fala com o time.",
+    "-font", bodyFont, "-fill", "#4752C4", "-pointsize", "42", "-annotate", "+150+1400", "Notificações ricas no Discord, no canal certo.",
     "-font", sansFont, "-fill", "#2D4C58", "-pointsize", "38", "-annotate", "+150+1540", "Webhooks guardados no cofre e mensagens ricas",
     "-annotate", "+150+1600", "no Discord pelo terminal, pela CI e pelo MCP.", "-stroke", "#C9D6DC", "-strokewidth", "2",
     "-draw", "line 150,2260 1450,2260", "-stroke", "none", "-font", bodyFont, "-fill", "#2D4C58", "-pointsize", "30",

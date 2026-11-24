@@ -10,7 +10,7 @@
 <h1 align="center">Discordfy</h1>
 
 <p align="center">
-  Seu agente e seus scripts avisam o time no Discord, no canal certo, com mensagens ricas.
+  Notificações ricas no Discord, no canal certo, a partir do terminal, do CI e do seu agente.
 </p>
 
 <p align="center">Um projeto da <a href="https://promovaweb.com">Promovaweb</a></p>
@@ -37,16 +37,17 @@
 
 ## O que é
 
-O Discordfy guarda o webhook de cada canal do Discord com um nome curto
-(`deploys`, `alertas`, `time-dev`) e envia mensagens ricas para o canal que
-você indicar. O canal é sempre nomeado no envio, então nenhuma mensagem sai
+O Discordfy é um sistema de notificações ricas para o Discord. Ele guarda o
+webhook de cada canal com um nome curto (`deploys`, `alertas`, `time-dev`) e
+envia notificações com embeds para o canal que você indicar. Não é um bot:
+ele não lê nem responde mensagens, só publica nos canais pelos webhooks. O canal é sempre nomeado no envio, então nenhuma mensagem sai
 para um destino implícito. O mesmo binário abre três modos:
 
 | Modo | Como abrir | Para quê |
 | --- | --- | --- |
 | TUI | `discordfy` | ver os webhooks cadastrados (canal e endereço), cadastrar, testar e enviar |
 | CLI | `discordfy send <canal> ...` | scripts, CI, hooks e cron, com saída em texto ou `--json` |
-| MCP | `discordfy mcp` | seu agente de IA reporta progresso e resultados no Discord do time |
+| MCP | `discordfy mcp` | seu agente de IA também envia notificações, por exemplo ao terminar uma tarefa |
 
 As URLs ficam cifradas (AES-256-GCM) em `~/.discordfy/credentials.json`. O
 token nunca aparece em listagem, log ou tool do MCP sem que você peça.
@@ -178,8 +179,8 @@ claude mcp add discordfy -- discordfy mcp
 | `webhook_test` | confere um webhook sem postar |
 | `webhook_edit` | muda o nome e o avatar padrão do webhook no Discord |
 
-Peça ao agente, por exemplo: "quando terminar, reporte no canal `time-dev` o
-que mudou, os testes e o link do PR".
+Peça ao agente, por exemplo: "quando terminar, envie uma notificação no canal
+`time-dev` com o que mudou, os testes e o link do PR".
 
 ## Documentação
 

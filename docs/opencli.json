@@ -3,9 +3,9 @@
   "opencli": "0.1",
   "info": {
     "title": "Discordfy",
-    "version": "0.1.0",
-    "summary": "CLI, TUI and MCP stdio server to send rich messages to Discord channels through stored webhooks.",
-    "description": "CLI, TUI and MCP stdio server to send rich messages to Discord channels through stored webhooks. Without arguments it opens the TUI; \"discordfy mcp\" starts the MCP server over stdio; any other command runs as a CLI with text or --json output.",
+    "version": "0.1.1",
+    "summary": "Rich Discord notifications: CLI, TUI and MCP stdio server that sends embeds to channels through webhooks saved by name.",
+    "description": "Rich Discord notifications: CLI, TUI and MCP stdio server that sends embeds to channels through webhooks saved by name. Without arguments it opens the TUI; \"discordfy mcp\" starts the MCP server over stdio; any other command runs as a CLI with text or --json output.",
     "contact": {
       "name": "Promovaweb",
       "url": "https://promovaweb.com/discordfy/"
@@ -20,7 +20,7 @@
   },
   "command": {
     "name": "discordfy",
-    "description": "CLI, TUI and MCP stdio server to send rich messages to Discord channels through stored webhooks.",
+    "description": "Rich Discord notifications: CLI, TUI and MCP stdio server that sends embeds to channels through webhooks saved by name.",
     "options": [
       {
         "name": "--help",

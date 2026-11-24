@@ -63,7 +63,7 @@ git log -1 --format='%s' | discordfy send commits --stdin --silent
 0 9 * * 1-5 discordfy send time-dev --title "Bom dia" --description "$(cat /srv/relatorio.md)" --color info
 ```
 
-## Agente reportando uma tarefa
+## Agente notificando o fim de uma tarefa
 
 Ao fim de uma tarefa longa, o agente chama `discord_send` com:
 
@@ -73,5 +73,5 @@ Ao fim de uma tarefa longa, o agente chama `discord_send` com:
 - `color`: `green` para sucesso, `yellow` para pendência, `red` para falha;
 - `url`: o PR, o deploy ou o relatório.
 
-Antes de reportar falhas que envolvam dados sensíveis, confirme com a pessoa
+Antes de notificar falhas que envolvam dados sensíveis, confirme com a pessoa
 o que pode ir para o canal.

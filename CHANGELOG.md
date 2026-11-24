@@ -2,6 +2,22 @@
 
 Formato baseado em Keep a Changelog. Versões seguem SemVer.
 
+## [0.1.1] - 2026-11-24
+
+### Alterado
+
+- Posicionamento: o Discordfy se apresenta como sistema de notificações
+  ricas para o Discord, não como bot. README, guia, ebook, descrição dos
+  pacotes e capa trocam "Seu agente fala com o time" por "Notificações
+  ricas no Discord, no canal certo".
+- Os links do site apontam para o portal `https://promovaweb.com/discordfy/`
+  e a documentação aponta para o Guia do Usuário no repositório.
+
+### Corrigido
+
+- `send --payload -` lê o stdin: o parser aceita o `-` isolado como valor
+  de option.
+
 ## [0.1.0] - 2026-11-24
 
 Primeira versão do Discordfy, criada a partir do Termfy Starter Kit 0.13.4.
