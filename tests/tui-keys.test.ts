@@ -8,8 +8,8 @@ import { withTui } from "./tui-fixture.ts";
 test("numbered tabs include icons and declared actions appear in the bar", async () => {
   await withTui(async (setup) => {
     const frame = setup.captureCharFrame();
-    expect(frame).toContain("1 ⌂ Overview");
-    expect(frame).toContain("5 ℹ About");
+    expect(frame).toContain("2 ⌂ Overview");
+    expect(frame).toContain("6 ℹ About");
     const bar = frame.trimEnd().split("\n").at(-1)!;
     expect(bar).toContain("reload");
     expect(bar).toContain("copy MCP config");
@@ -20,9 +20,10 @@ test("Tab keeps the active tab and brackets switch through the new tab order", a
     setup.mockInput.pressTab({ shift: true });
     await setup.renderOnce();
     expect(setup.captureCharFrame()).toContain("ENVIRONMENT");
+    // "[" steps back into the new first tab, Webhooks, which is empty in this fixture.
     setup.mockInput.pressKey("[");
     await setup.renderOnce();
-    expect(setup.captureCharFrame()).toContain("CREDITS");
+    expect(setup.captureCharFrame()).toContain("No webhooks");
     setup.mockInput.pressKey("]");
     await setup.renderOnce();
     expect(setup.captureCharFrame()).toContain("ENVIRONMENT");
@@ -140,7 +141,7 @@ test("switching tabs destroys the obsolete key bar items", async () => {
     const bar = app.getChildren().at(-1)!;
     const actions = bar.getChildren()[1]!;
     const items = actions.getChildren();
-    setup.mockInput.pressKey("5");
+    setup.mockInput.pressKey("6");
     await setup.renderOnce();
     expect(actions.isDestroyed).toBe(true);
     expect(items.every((item) => item.isDestroyed)).toBe(true);

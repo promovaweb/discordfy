@@ -65,7 +65,8 @@ export function parse(root: Command, argv: readonly string[]): Parsed {
         let value = inlineValue;
         if (value === undefined) {
           const next = argv[i + 1];
-          const nextIsValue = next !== undefined && !next.startsWith("-");
+          // A lone "-" is a value (stdin), not an option.
+          const nextIsValue = next !== undefined && (!next.startsWith("-") || next === "-");
           if (nextIsValue) {
             value = next;
             i += 1;
@@ -80,7 +81,12 @@ export function parse(root: Command, argv: readonly string[]): Parsed {
             accepted: def.argument.values,
           });
         }
-        options[key] = value === undefined ? true : value;
+        if (def.repeatable && value !== undefined) {
+          const previous = options[key];
+          options[key] = [...(Array.isArray(previous) ? previous : []), value];
+        } else {
+          options[key] = value === undefined ? true : value;
+        }
       } else {
         if (inlineValue !== undefined) {
           throw error.usage(`Option ${def.name} does not take a value.`, { option: def.name });

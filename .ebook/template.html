@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>$title$</title>
+<style>
+$fontfaces$
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <img class="cover-mark" src="brand/logo/icon.svg" alt="Logo do Discordfy">
+  <div class="cover-title">
+    <div class="cover-kicker">Discordfy</div>
+    <h1>Guia do<br>Usuário</h1>
+    <div class="cover-tagline">Seu agente fala com o time.</div>
+    <div class="cover-desc">Webhooks guardados no cofre e mensagens ricas no Discord pelo terminal, pela CI e pelo MCP.</div>
+  </div>
+  <div class="cover-meta">
+    <div>Edição v$version$</div>
+    <div>Gerado em $date$</div>
+    <div>Fonte editorial: docs/user/</div>
+  </div>
+</div>
+
+$if(toc)$
+<nav id="TOC" role="doc-toc">
+$toc$
+</nav>
+$endif$
+
+<main>
+$body$
+</main>
+
+</body>
+</html>

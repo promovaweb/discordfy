@@ -16,7 +16,31 @@ sobre stdio. Nada mais é escrito em stdout; diagnósticos vão para stderr.
 Para o Claude Code: `claude mcp add {{bin}} -- {{bin}} mcp`.
 Para desenvolvimento, sem compilar: `"command": "bun", "args": ["run", "src/main.ts", "mcp"]`.
 
-## Tools
+## Tools do Discordfy
+
+| Tool | Entrada | Saída |
+| --- | --- | --- |
+| `webhooks_list` | nenhuma | `{ count, webhooks: [{ channel, id, masked }] }`, sem token |
+| `webhook_test` | `channel` | `{ channel, ok, webhook: { id, name, channel_id, guild_id } }`; confere sem postar |
+| `webhook_edit` | `channel`, `name?`, `avatar_url?`, `remove_avatar?` | muda o nome e o avatar padrão do webhook no Discord |
+| `discord_send` | `channel` e os campos abaixo | `{ channel, sent, message: { id, channel_id, timestamp } }` ou `{ dryRun, payload }` |
+
+`discord_send` exige `channel`, o nome salvo pelo CLI. Os demais campos são
+opcionais e espelham as options de `send`: `content`, `title`, `description`,
+`url`, `color` (nome, `#RRGGBB` ou decimal), `fields` (`[{ name, value,
+inline? }]`), `author` (`{ name, url?, icon_url? }`), `footer` (`{ text,
+icon_url? }`), `image`, `thumbnail`, `timestamp` (`now` ou ISO 8601),
+`embeds` (objetos de embed crus), `username`, `avatar_url`, `tts`,
+`thread_id`, `thread_name`, `silent`, `suppress_embeds`, `allow_mentions`,
+`payload` (corpo completo do webhook, aceita `embed` no singular) e
+`dry_run`. Os limites do Discord são conferidos antes da chamada; um erro
+volta com `isError: true` e `{ error: { code, name, message, details } }`.
+
+Nenhuma tool devolve a URL do webhook nem o token. Cadastrar, trocar,
+renomear e remover webhooks ficam no CLI e na TUI, onde a pessoa cola o
+segredo.
+
+## Tools do esqueleto
 
 | Tool | Entrada | Saída |
 | --- | --- | --- |
@@ -28,8 +52,8 @@ Para desenvolvimento, sem compilar: `"command": "bun", "args": ["run", "src/main
 | `config_get` | `key` | valor da key; `isError` quando não existe |
 | `credentials_status` | nenhuma | file, master key source, count e names |
 
-Nenhuma tool devolve o valor de uma credencial, e nenhuma tool grava. Escrita
-continua no CLI, onde há confirmação humana.
+Nenhuma tool devolve o valor de uma credencial. As tools do esqueleto não
+gravam; a configuração continua no CLI, onde há confirmação humana.
 
 ## Resources
 

@@ -67,7 +67,39 @@ describe("terminal palette", () => {
     expectReferences(theme);
     expect((theme.background as RGBA).intent).toBe("default");
     expect((theme.surface as RGBA).intent).toBe("default");
-    expect((theme.accent as RGBA).slot).toBe(4);
+    // Specsfy design system: cyan carries the turquoise focus, magenta the violet selection.
+    expect((theme.accent as RGBA).slot).toBe(6);
+    expect((theme.accentSecondary as RGBA).slot).toBe(5);
+    expect((theme.selection as RGBA).slot).toBe(5);
+    expect((theme.selectionText as RGBA).intent).toBe("default");
+    expect((theme.keyText as RGBA).intent).toBe("default");
+    // The active tab, primary actions and key chips reuse the accent block.
+    for (const role of ["tabActive", "primary", "keyBackground", "borderActive"] as const) expect((theme[role] as RGBA).slot).toBe(6);
+    for (const role of ["tabActiveText", "primaryText"] as const) expect(theme[role]).toEqual(theme.keyText);
+  });
+
+  test("night and day carry the Specsfy brand roles", () => {
+    expect(themes.night).toMatchObject({
+      background: "#000A0E", surface: "#001117", surfaceHigh: "#03212A", border: "#2D4C58",
+      accent: "#5EEDE1", accentSecondary: "#C4B5FD",
+      selection: "#6D28D9", selectionText: "#F2F8F9",
+      tabActive: "#5EEDE1", tabActiveText: "#001117",
+      primary: "#15626A", primaryText: "#F2F8F9",
+      keyBackground: "#15626A", keyText: "#F2F8F9",
+    });
+    expect(themes.day).toMatchObject({
+      background: "#FFFFFF", surface: "#F2F8F9", accent: "#15626A", accentSecondary: "#6D28D9",
+      selection: "#6D28D9", selectionText: "#FFFFFF",
+      tabActive: "#15626A", tabActiveText: "#FFFFFF",
+      primary: "#15626A", primaryText: "#FFFFFF",
+      keyBackground: "#15626A", keyText: "#FFFFFF",
+    });
+    // Text over every colored block stays readable (WCAG AA for normal text).
+    for (const theme of [themes.night, themes.day]) {
+      for (const [block, text] of [["selection", "selectionText"], ["tabActive", "tabActiveText"], ["primary", "primaryText"], ["keyBackground", "keyText"]] as const) {
+        expect(contrast(rgb(theme[block] as string), rgb(theme[text] as string))).toBeGreaterThanOrEqual(4.5);
+      }
+    }
   });
 
   for (const [name, colors] of Object.entries({ tokyo, solarizedDark, gruvbox, solarizedLight })) {
@@ -82,12 +114,18 @@ describe("terminal palette", () => {
       for (const role of ["accent", "accentSecondary", "ok", "warn", "error"] as const) {
         expect(contrast(color(slots[role]), bg)).toBeGreaterThanOrEqual(2.5);
       }
-      // A 16-color palette cannot always provide 4.5:1 on its blue block.
+      // A 16-color palette cannot always provide 4.5:1 on its accent block.
       // Require 3:1 and the best contrast among the supported neutral candidates.
       const keyContrast = contrast(color(slots.keyText), color(slots.accent));
       expect(keyContrast).toBeGreaterThanOrEqual(3);
       for (const candidate of ["fg", 0, 15] as const) {
         expect(keyContrast).toBeGreaterThanOrEqual(contrast(color(candidate), color(slots.accent)));
+      }
+      // Selected row: the violet slot (normal or bright) with the best text over it.
+      expect([5, 13]).toContain(slots.selection);
+      const selectionContrast = contrast(color(slots.selectionText), color(slots.selection));
+      for (const candidate of ["fg", 0, 15] as const) {
+        expect(selectionContrast).toBeGreaterThanOrEqual(contrast(color(candidate), color(slots.selection)));
       }
       if (slots.surfaceHigh !== "bg") {
         expect(contrast(color(slots.surfaceHigh), bg)).toBeGreaterThanOrEqual(1.08);

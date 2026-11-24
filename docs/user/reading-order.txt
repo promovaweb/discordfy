@@ -1,0 +1,11 @@
+# Ordem de leitura do Discordfy · Guia do Usuário.
+# Cada página Markdown de docs/user/ aparece exatamente uma vez.
+docs/user/README.md
+docs/user/01-introducao-e-instalacao.md
+docs/user/02-canais-e-webhooks.md
+docs/user/03-primeira-mensagem.md
+docs/user/04-mensagens-ricas-com-embeds.md
+docs/user/05-payload-completo.md
+docs/user/06-seu-agente-no-discord.md
+docs/user/07-automacoes.md
+docs/user/08-seguranca-e-referencia.md

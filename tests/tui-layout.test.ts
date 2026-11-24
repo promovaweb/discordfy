@@ -4,8 +4,9 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createTestRenderer } from "@opentui/core/testing";
-import { BoxRenderable, ScrollBoxRenderable, TextRenderable, MarkdownRenderable, type Renderable } from "@opentui/core";
+import { BoxRenderable, ScrollBoxRenderable, TextRenderable, MarkdownRenderable, type RGBA, type Renderable } from "@opentui/core";
 import { HOME_VARIABLE, MASTER_KEY_VARIABLE } from "../src/config/paths.ts";
+import { manifest } from "../src/app/manifest.ts";
 import { setCredential } from "../src/config/credentials.ts";
 import { mountTui } from "../src/tui/index.ts";
 import { iconSets } from "../src/tui/icons.ts";
@@ -13,7 +14,7 @@ import { terminalTheme } from "../src/tui/theme.ts";
 import { normalizeMarkdown } from "../src/tui/screens/docs.ts";
 
 const sizes = [[60, 16], [64, 20], [80, 24], [100, 30], [130, 32], [200, 60]] as const;
-const tabs = ["overview", "settings", "credentials", "docs", "about"];
+const tabs = ["webhooks", "overview", "settings", "credentials", "docs", "about"];
 
 /** Finds actual scroll viewports so assertions include their native visibility. */
 function scrollPanels(node: Renderable): ScrollBoxRenderable[] {
@@ -53,19 +54,40 @@ for (const [width, height] of sizes) {
         expect(bar).toContain("commands");
         const barNode = setup.renderer.root.getChildren()[0]!.getChildren().at(-1)! as BoxRenderable;
         expect(barNode.backgroundColor.a).toBe(0);
-        const assertPlainKeys = (node: Renderable): void => {
-          if (node instanceof TextRenderable) expect(node.bg.a).toBe(0);
-          node.getChildren().forEach(assertPlainKeys);
+        // Specsfy key bar: every key is a chip on keyBackground with keyText;
+        // descriptions and status stay on the transparent bar.
+        const theme = terminalTheme();
+        const texts: TextRenderable[] = [];
+        const collect = (node: Renderable): void => {
+          if (node instanceof TextRenderable) texts.push(node);
+          node.getChildren().forEach(collect);
         };
-        assertPlainKeys(barNode);
+        collect(barNode);
+        const chips = texts.filter((node) => node.bg.a !== 0);
+        expect(chips.length).toBeGreaterThanOrEqual(3);
+        for (const chip of chips) {
+          expect(chip.bg.equals(theme.keyBackground as RGBA)).toBe(true);
+          expect(chip.fg.equals(theme.keyText as RGBA)).toBe(true);
+        }
+        expect(chips.map((chip) => chip.plainText.trim())).toEqual(expect.arrayContaining(["?", "q", "^K"]));
         expect(bar).not.toMatch(/\bq\s+q\b/);
         for (const line of lines) {
           expect(Bun.stringWidth(line)).toBeLessThanOrEqual(width);
           for (const border of line.matchAll(/╰[^╯]*╯/g)) expect(border[0]).toMatch(/^[╰╯─]+$/);
         }
         expect(frame).not.toContain("visual-test-secret");
-        // The active tab alone owns a full-width indicator, without a background block.
-        expect(lines[width >= 80 ? 4 : 2]!.trim()).toMatch(/^━+$/);
+        // Specsfy tab bar: the active tab alone is a filled tabActive block.
+        const tabLabels: TextRenderable[] = [];
+        const findTabs = (node: Renderable): void => {
+          if (node instanceof TextRenderable && node.bg.a !== 0 && node.bg.equals(theme.tabActive as RGBA) && node.fg.equals(theme.tabActiveText as RGBA)) tabLabels.push(node);
+          node.getChildren().forEach(findTabs);
+        };
+        // Shell children: header, header gap, tab bar, ...
+        const tabBarNode = setup.renderer.root.getChildren()[0]!.getChildren()[2]!;
+        findTabs(tabBarNode);
+        expect(tabLabels).toHaveLength(1);
+        expect(lines[tabBarNode.y]).toContain(tabLabels[0]!.plainText.trim());
+        expect(frame).not.toContain("━");
         if (width >= 80) {
           expect(lines[5]!.trim()).toBe("");
           expect(lines.at(-2)!.trim()).toBe("");
@@ -132,17 +154,17 @@ for (const [width, height] of sizes) {
           expect(bar).not.toContain("…");
           // Assert buttons in the content area, independently of status hints.
           const content = lines.slice(3, -1).join("\n");
-          expect(content).toMatch(/\[c\] copy MCP config/);
-          expect(content).toMatch(/\[r\] reload/);
+          expect(content).toMatch(/ c  copy MCP config/);
+          expect(content).toMatch(/ r  reload/);
           const reading = scrollPanels(setup.renderer.root).find(panel => panel.verticalScrollBar.visible)!;
           expect(reading).toBeDefined();
-          expect(content).toContain("termfy --help");
+          expect(content).toContain(`${manifest.bin} --help`);
           reading.scrollTo(Infinity);
           await setup.renderOnce();
-          expect(setup.captureCharFrame()).toContain("termfy --skill");
+          expect(setup.captureCharFrame()).toContain(`${manifest.bin} --skill`);
         }
         if (tab === "overview" && width >= 80 && height >= 30) {
-          for (const text of ["IN THE TERMINAL", "FOR AGENTS", "termfy credentials set <name>", "termfy --skill", '"args": ["mcp"]']) expect(frame).toContain(text);
+          for (const text of ["IN THE TERMINAL", "FOR AGENTS", `${manifest.bin} credentials set <name>`, `${manifest.bin} --skill`, '"args": ["mcp"]']) expect(frame).toContain(text);
         }
         if (tab === "docs") {
           const checkDocument = (node: Renderable): void => {
@@ -150,7 +172,7 @@ for (const [width, height] of sizes) {
             node.getChildren().forEach(checkDocument);
           };
           checkDocument(setup.renderer.root);
-          if (width === 80) expect(frame).toMatch(/│\s{4,}\[options\]\./);
+          if (width === 80) expect(frame).toMatch(/│\s{4,}arguments\] \[options\]\./);
         }
         if (tab === "overview" && width === 200) {
           const borders = lines.filter(line => /^\s*╰/.test(line));

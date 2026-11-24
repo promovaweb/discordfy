@@ -1,0 +1,19 @@
+---
+title: "Discordfy · Guia do Usuário"
+subtitle: "Seu agente fala com o time"
+author:
+  - "Discordfy"
+publisher: "Promovaweb"
+lang: "pt-BR"
+rights: "Documentação oficial do projeto Discordfy, GNU AGPL 3.0"
+description: "Edição portátil do guia do usuário do Discordfy: webhooks do Discord guardados no cofre e mensagens ricas pelo CLI, pela TUI, pela CI e pelo MCP."
+subject:
+  - "Discord"
+  - "webhooks"
+  - "CLI"
+  - "MCP"
+  - "agentes de IA"
+identifier: "https://github.com/promovaweb/discordfy"
+tagline: "Seu agente fala com o time."
+# Identidade canônica: brand/logo/icon.svg
+---

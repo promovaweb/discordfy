@@ -1,10 +1,22 @@
 # Instruções para agentes
 
-Este repositório é o starter kit do Termfy: um binário em Bun com três modos
+Este repositório é o binário `discordfy`, criado com o starter kit do
+Termfy: um binário em Bun com três modos
 no mesmo executável. Sem argumentos abre a TUI; com argumentos roda como CLI
 com saída em texto ou `--json`; `<bin> mcp` vira servidor Model Context
-Protocol via stdio. Ele é um template do GitHub; projetos derivados herdam
-esta estrutura.
+Protocol via stdio.
+
+O Discordfy guarda o webhook de cada canal do Discord com um nome curto, no
+cofre cifrado (`webhook.<channel>` em `~/.discordfy/credentials.json`), e envia
+mensagens ricas sempre para um canal nomeado. O domínio fica em
+`src/discord/` (`webhooks.ts`, `message.ts`, `api.ts`); os commands `send` e
+`webhooks`, a screen `webhooks` e as tools `discord_send`, `webhooks_list`,
+`webhook_test` e `webhook_edit` usam essa camada. A skill para os usuários
+fica em `skills/discordfy/` e é instalada com `npx skills add
+promovaweb/discordfy`. A URL do webhook é segredo: nunca entra em argument,
+log, `--json` sem `--reveal` ou tool MCP; a TUI mostra o endereço mascarado e
+só revela com `v`. Os testes trocam o Discord por um servidor local com
+`DISCORDFY_API_BASE`.
 
 As skills que ensinam a evoluir este projeto vêm do framework
 [`promovaweb/termfy`](https://github.com/promovaweb/termfy) e estão

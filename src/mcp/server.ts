@@ -16,6 +16,7 @@ import { registerConfigTools } from "./tools/config.ts";
 import { registerResources } from "./resources/base.ts";
 import { registerPrompts } from "./prompts.ts";
 import { registerDoctorTools } from "./tools/doctor.ts";
+import { registerDiscordTools } from "./tools/discord.ts";
 
 /** Metadata collected during registration, for `mcp --list`. */
 export interface Catalog {
@@ -49,6 +50,7 @@ function createServer(): Registrar {
 }
 
 function registerAll(r: Registrar): void {
+  registerDiscordTools(r);
   registerBaseTools(r);
   registerConfigTools(r);
   registerDoctorTools(r);

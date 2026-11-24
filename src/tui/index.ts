@@ -4,10 +4,15 @@
  * Screen layout:
  *
  *   ▌ Title  v1.0                                      platform
- *    1 ⌂ Overview   2 ⚙ Settings   3 ◈ Credentials   …   (click or number)
- *   ━━━━━━━━━━━━━
+ *   [ 1 ⌂ Overview ]   2 ⚙ Settings    3 ◈ Credentials   …   (click or number)
  *   active screen (or "terminal too small" below 60×16)
  *   status text   screen actions, help, quit (click runs)   ^K commands
+ *
+ * Colors follow the Specsfy design system (see `theme.ts`): the active tab
+ * is a filled turquoise block (`tabActive` / `tabActiveText`, drawn as
+ * [ … ] above), the key bar shows each key as a petrol chip
+ * (`keyBackground` / `keyText`) and dialogs mark the focused action with
+ * the petrol `primary` block.
  *
  * Every command has a key, a mouse path and a palette entry. Keys: ←/→,
  * [ ] and 1..9 switch tabs; Tab / Shift+Tab move the focus between the
@@ -181,10 +186,8 @@ export async function mountTui(renderer: CliRenderer, options: TuiOptions = {}, 
   let hovered = -1;
   const tabItems = screens.map((screen, index) => {
     const label = new TextRenderable(renderer, { content: "", fg: theme.textDim, wrapMode: "none", selectable: false });
-    const item = new BoxRenderable(renderer, { flexDirection: "column", flexShrink: 0 });
-    const indicator = new TextRenderable(renderer, { content: "", height: 1, fg: theme.accent, selectable: false, wrapMode: "none" });
+    const item = new BoxRenderable(renderer, { flexDirection: "row", flexShrink: 0 });
     item.add(label);
-    item.add(indicator);
     clickable(renderer, item, {
       onClick: () => show(index),
       onHover: (inside) => {
@@ -193,7 +196,7 @@ export async function mountTui(renderer: CliRenderer, options: TuiOptions = {}, 
       },
     });
     tabBar.add(item);
-    return { item, label, indicator, screen, index };
+    return { item, label, screen, index };
   });
   const headerGap = new BoxRenderable(renderer, { height: initialSpace.pageY, flexShrink: 0 });
   app.add(headerGap);
@@ -216,8 +219,9 @@ export async function mountTui(renderer: CliRenderer, options: TuiOptions = {}, 
   const bar = new BoxRenderable(renderer, { height: 1, flexDirection: "row", paddingLeft: initialSpace.pageX, paddingRight: initialSpace.pageX, gap: controlSpacing.gap });
   const statusText = new TextRenderable(renderer, { content: "", fg: theme.textDim, wrapMode: "none", flexShrink: 1, minWidth: 0, selectable: false });
   let barItems = new BoxRenderable(renderer, { flexDirection: "row", gap: controlSpacing.gap, flexGrow: 1, flexShrink: 1, minWidth: 0 });
-  const paletteHint = new BoxRenderable(renderer, { flexDirection: "row", flexShrink: 0, width: 12 });
-  paletteHint.add(new TextRenderable(renderer, { content: "^K", fg: theme.accent, attributes: TextAttributes.BOLD, selectable: false }));
+  const paletteHint = new BoxRenderable(renderer, { flexDirection: "row", flexShrink: 0, width: 13 });
+  // Key chip in the Specsfy style: the key sits on the petrol key block.
+  paletteHint.add(new TextRenderable(renderer, { content: " ^K ", fg: theme.keyText, bg: theme.keyBackground, attributes: TextAttributes.BOLD, selectable: false }));
   const paletteLabel = new TextRenderable(renderer, { content: " commands", fg: theme.textDim, selectable: false });
   paletteHint.add(paletteLabel);
   clickable(renderer, paletteHint, {
@@ -311,24 +315,31 @@ export async function mountTui(renderer: CliRenderer, options: TuiOptions = {}, 
   };
 
   const paintTabs = () => {
-    for (const { item, label, indicator, screen, index } of tabItems) {
+    // Full titles only when every tab fits; otherwise inactive tabs shrink to their icon.
+    // Each tab costs its padded label (title + 2) plus the roomy tab gap (2).
+    const fullWidth = tabItems.reduce((sum, { screen, index }) => sum + Bun.stringWidth(`${index < 9 ? `${index + 1} ` : ""}${withIcon(icons, screen.icon ?? "list", screen.title)}`) + 4, 6);
+    const shrink = currentLayout === "compact" || fullWidth > renderer.width;
+    for (const { item, label, screen, index } of tabItems) {
       const selected = index === activeIndex;
       const number = index < 9 ? `${index + 1} ` : "";
       // Compact terminals show the title only on the active tab.
-      const title = currentLayout === "compact" && !selected ? (icons[screen.icon ?? "list"] || screen.title.slice(0, 3)) : withIcon(icons, screen.icon ?? "list", screen.title);
-      const text = `${number}${title}`;
+      const title = shrink && !selected ? (icons[screen.icon ?? "list"] || screen.title.slice(0, 3)) : withIcon(icons, screen.icon ?? "list", screen.title);
+      // Every tab carries one cell of padding per side, so the active
+      // turquoise block never shifts its neighbors when the focus moves.
+      const text = ` ${number}${title} `;
       label.content = text;
-      indicator.content = selected ? "━".repeat(Bun.stringWidth(text)) : "";
-      label.fg = selected ? theme.accent : index === hovered ? theme.text : theme.textDim;
+      label.fg = selected ? theme.tabActiveText : index === hovered ? theme.text : theme.textDim;
+      label.bg = selected ? theme.tabActive : theme.background;
       label.attributes = selected ? TextAttributes.BOLD : TextAttributes.NONE;
       item.backgroundColor = theme.background;
     }
   };
 
   const barItem = (action: ScreenAction) => {
-    const item = new BoxRenderable(renderer, { flexDirection: "row", flexShrink: 0, width: Bun.stringWidth(keyLabel(action)) + Bun.stringWidth(action.description) + 1 });
+    const item = new BoxRenderable(renderer, { flexDirection: "row", flexShrink: 0, width: actionWidth(action) });
     const text = new TextRenderable(renderer, { content: ` ${action.description}`, fg: theme.textDim, selectable: false });
-    item.add(new TextRenderable(renderer, { content: keyLabel(action), fg: theme.accent, attributes: TextAttributes.BOLD, selectable: false }));
+    // Key chip in the Specsfy style: padded key on the petrol key block.
+    item.add(new TextRenderable(renderer, { content: ` ${keyLabel(action)} `, fg: theme.keyText, bg: theme.keyBackground, attributes: TextAttributes.BOLD, selectable: false }));
     item.add(text);
     clickable(renderer, item, {
       onClick: () => runAction(action),
@@ -337,8 +348,8 @@ export async function mountTui(renderer: CliRenderer, options: TuiOptions = {}, 
     return item;
   };
 
-  /** Measures a hint exactly as barItem renders its key and description. */
-  const actionWidth = (action: ScreenAction) => Bun.stringWidth(keyLabel(action)) + Bun.stringWidth(action.description) + 1;
+  /** Measures a hint exactly as barItem renders its padded key chip and description. */
+  const actionWidth = (action: ScreenAction) => Bun.stringWidth(keyLabel(action)) + 2 + Bun.stringWidth(action.description) + 1;
 
   const refreshBar = () => {
     fitStatus();

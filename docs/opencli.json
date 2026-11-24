@@ -2,16 +2,16 @@
   "$schema": "https://opencli.org/draft.json",
   "opencli": "0.1",
   "info": {
-    "title": "Termfy",
-    "version": "0.13.4",
-    "summary": "CLI, TUI and MCP stdio server skeleton in Bun, with the Termfy framework skills installed.",
-    "description": "CLI, TUI and MCP stdio server skeleton in Bun, with the Termfy framework skills installed. Without arguments it opens the TUI; \"termfy mcp\" starts the MCP server over stdio; any other command runs as a CLI with text or --json output.",
+    "title": "Discordfy",
+    "version": "0.1.0",
+    "summary": "CLI, TUI and MCP stdio server to send rich messages to Discord channels through stored webhooks.",
+    "description": "CLI, TUI and MCP stdio server to send rich messages to Discord channels through stored webhooks. Without arguments it opens the TUI; \"discordfy mcp\" starts the MCP server over stdio; any other command runs as a CLI with text or --json output.",
     "contact": {
       "name": "Promovaweb",
-      "url": "https://promovaweb.com"
+      "url": "https://promovaweb.com/discordfy/"
     },
     "license": {
-      "name": "MIT"
+      "name": "AGPL-3.0-only"
     }
   },
   "conventions": {
@@ -19,8 +19,8 @@
     "optionSeparator": " "
   },
   "command": {
-    "name": "termfy",
-    "description": "CLI, TUI and MCP stdio server skeleton in Bun, with the Termfy framework skills installed.",
+    "name": "discordfy",
+    "description": "CLI, TUI and MCP stdio server to send rich messages to Discord channels through stored webhooks.",
     "options": [
       {
         "name": "--help",
@@ -79,8 +79,848 @@
     ],
     "commands": [
       {
+        "name": "send",
+        "description": "Send a rich message (text and embed) to a saved channel.",
+        "arguments": [
+          {
+            "name": "channel",
+            "description": "Saved channel name (see `webhooks list`).",
+            "required": true
+          },
+          {
+            "name": "message",
+            "description": "Message text (up to 2000 characters). Optional when an embed or payload is given.",
+            "required": false,
+            "arity": {
+              "minimum": 0
+            }
+          }
+        ],
+        "options": [
+          {
+            "name": "--stdin",
+            "description": "Read the message text from stdin."
+          },
+          {
+            "name": "--title",
+            "description": "Embed title (up to 256 characters).",
+            "aliases": [
+              "-t"
+            ],
+            "arguments": [
+              {
+                "name": "text",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--description",
+            "description": "Embed description (up to 4096 characters, Markdown accepted).",
+            "aliases": [
+              "-d"
+            ],
+            "arguments": [
+              {
+                "name": "text",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--url",
+            "description": "Link opened by the embed title.",
+            "arguments": [
+              {
+                "name": "url",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--color",
+            "description": "Embed side color: #RRGGBB, decimal or a name (blurple, green, yellow, red, info, orange, grey...).",
+            "aliases": [
+              "-c"
+            ],
+            "arguments": [
+              {
+                "name": "color",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--field",
+            "description": "Embed field, stacked. Repeat for more (up to 25).",
+            "arguments": [
+              {
+                "name": "name=value",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--inline-field",
+            "description": "Embed field shown side by side with other inline fields. Repeatable.",
+            "arguments": [
+              {
+                "name": "name=value",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--embed",
+            "description": "Extra embed as a JSON object or @file.json, appended after the one built from the flags. Repeat for more (up to 10 per message).",
+            "arguments": [
+              {
+                "name": "json",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--author",
+            "description": "Embed author line.",
+            "arguments": [
+              {
+                "name": "name",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--author-url",
+            "description": "Link of the author line.",
+            "arguments": [
+              {
+                "name": "url",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--author-icon",
+            "description": "Small image beside the author.",
+            "arguments": [
+              {
+                "name": "url",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--footer",
+            "description": "Embed footer text.",
+            "arguments": [
+              {
+                "name": "text",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--footer-icon",
+            "description": "Small image beside the footer.",
+            "arguments": [
+              {
+                "name": "url",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--image",
+            "description": "Large image at the bottom of the embed.",
+            "arguments": [
+              {
+                "name": "url",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--thumbnail",
+            "description": "Small image at the top right of the embed.",
+            "arguments": [
+              {
+                "name": "url",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--timestamp",
+            "description": "Embed timestamp: `now` (default when the value is omitted) or an ISO 8601 date.",
+            "arguments": [
+              {
+                "name": "when",
+                "required": false,
+                "arity": {
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--username",
+            "description": "Overrides the webhook display name for this message. Default: send.username.",
+            "aliases": [
+              "-u"
+            ],
+            "arguments": [
+              {
+                "name": "name",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--avatar-url",
+            "description": "Overrides the webhook avatar for this message. Default: send.avatarUrl.",
+            "arguments": [
+              {
+                "name": "url",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--tts",
+            "description": "Ask Discord to read the message aloud."
+          },
+          {
+            "name": "--thread-id",
+            "description": "Post inside an existing thread of the channel.",
+            "arguments": [
+              {
+                "name": "id",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--thread-name",
+            "description": "Create a forum post with this title (forum channels only).",
+            "arguments": [
+              {
+                "name": "name",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--payload",
+            "description": "JSON body in the Discord webhook format (content, username, avatar_url, tts, embeds or the legacy single embed); `-` reads stdin. Options given on the command line override its top-level fields.",
+            "arguments": [
+              {
+                "name": "file",
+                "required": true,
+                "arity": {
+                  "minimum": 1,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          {
+            "name": "--silent",
+            "description": "Deliver without push notifications; the channel only shows the unread badge."
+          },
+          {
+            "name": "--suppress-embeds",
+            "description": "Hide the automatic link previews of URLs in the text."
+          },
+          {
+            "name": "--allow-mentions",
+            "description": "Let @everyone, @here, roles and users in the text notify people."
+          },
+          {
+            "name": "--dry-run",
+            "description": "Print the JSON body that would be sent and exit without calling Discord."
+          }
+        ],
+        "examples": [
+          "discordfy send deploys \"Deploy finished\"",
+          "discordfy send deploys --title \"Deploy v1.4.0\" --description \"All checks passed\" --color green --field \"Branch=main\" --inline-field \"Time=42s\" --timestamp",
+          "git log -1 --format=%s | discordfy send commits --stdin",
+          "discordfy send alerts --payload message.json",
+          "discordfy send deploys \"Hello\" --dry-run --json"
+        ],
+        "exitCodes": [
+          {
+            "code": 0,
+            "description": "SUCCESS: Operation completed."
+          },
+          {
+            "code": 1,
+            "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+          },
+          {
+            "code": 2,
+            "description": "USAGE: Invalid arguments, options or subcommand."
+          },
+          {
+            "code": 4,
+            "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+          },
+          {
+            "code": 5,
+            "description": "NETWORK_OR_API: Network failure or unexpected API response."
+          },
+          {
+            "code": 6,
+            "description": "NOT_FOUND: Requested resource does not exist."
+          }
+        ]
+      },
+      {
+        "name": "webhooks",
+        "description": "Manage the Discord channel webhooks saved, encrypted, in ~/.discordfy/credentials.json.",
+        "aliases": [
+          "webhook",
+          "wh"
+        ],
+        "commands": [
+          {
+            "name": "add",
+            "description": "Save the webhook URL of a channel. The URL is read without echo or from stdin.",
+            "arguments": [
+              {
+                "name": "channel",
+                "description": "Channel name chosen by you: lower-case letters, digits, hyphen or underscore (e.g. deploys).",
+                "required": true
+              }
+            ],
+            "options": [
+              {
+                "name": "--stdin",
+                "description": "Read the URL from the first stdin line, even on an interactive terminal."
+              },
+              {
+                "name": "--force",
+                "description": "Replace the webhook when the channel already exists.",
+                "aliases": [
+                  "-f"
+                ]
+              },
+              {
+                "name": "--no-verify",
+                "description": "Save without checking the webhook with Discord."
+              }
+            ],
+            "examples": [
+              "discordfy webhooks add deploys",
+              "printf '%s' \"$DISCORD_WEBHOOK\" | discordfy webhooks add alerts --stdin"
+            ],
+            "interactive": true,
+            "exitCodes": [
+              {
+                "code": 0,
+                "description": "SUCCESS: Operation completed."
+              },
+              {
+                "code": 1,
+                "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+              },
+              {
+                "code": 2,
+                "description": "USAGE: Invalid arguments, options or subcommand."
+              },
+              {
+                "code": 4,
+                "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+              },
+              {
+                "code": 5,
+                "description": "NETWORK_OR_API: Network failure or unexpected API response."
+              },
+              {
+                "code": 6,
+                "description": "NOT_FOUND: Requested resource does not exist."
+              },
+              {
+                "code": 7,
+                "description": "PERMISSION: Permission denied on the file system."
+              },
+              {
+                "code": 130,
+                "description": "INTERRUPTED: Input cancelled or process interrupted."
+              }
+            ]
+          },
+          {
+            "name": "list",
+            "description": "List saved channels with their webhook address (token masked).",
+            "aliases": [
+              "ls"
+            ],
+            "options": [
+              {
+                "name": "--reveal",
+                "description": "Show the full webhook URLs, token included. In --json adds the field `url`."
+              }
+            ],
+            "examples": [
+              "discordfy webhooks list",
+              "discordfy webhooks list --json"
+            ],
+            "exitCodes": [
+              {
+                "code": 0,
+                "description": "SUCCESS: Operation completed."
+              },
+              {
+                "code": 1,
+                "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+              },
+              {
+                "code": 2,
+                "description": "USAGE: Invalid arguments, options or subcommand."
+              },
+              {
+                "code": 4,
+                "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+              },
+              {
+                "code": 5,
+                "description": "NETWORK_OR_API: Network failure or unexpected API response."
+              },
+              {
+                "code": 6,
+                "description": "NOT_FOUND: Requested resource does not exist."
+              },
+              {
+                "code": 7,
+                "description": "PERMISSION: Permission denied on the file system."
+              },
+              {
+                "code": 130,
+                "description": "INTERRUPTED: Input cancelled or process interrupted."
+              }
+            ]
+          },
+          {
+            "name": "show",
+            "description": "Show the webhook of one channel (token masked unless --reveal).",
+            "aliases": [
+              "get"
+            ],
+            "arguments": [
+              {
+                "name": "channel",
+                "description": "Channel name chosen by you: lower-case letters, digits, hyphen or underscore (e.g. deploys).",
+                "required": true
+              }
+            ],
+            "options": [
+              {
+                "name": "--reveal",
+                "description": "Print the full URL. In --json the field becomes `url`."
+              }
+            ],
+            "examples": [
+              "discordfy webhooks show deploys",
+              "discordfy webhooks show deploys --reveal"
+            ],
+            "exitCodes": [
+              {
+                "code": 0,
+                "description": "SUCCESS: Operation completed."
+              },
+              {
+                "code": 1,
+                "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+              },
+              {
+                "code": 2,
+                "description": "USAGE: Invalid arguments, options or subcommand."
+              },
+              {
+                "code": 4,
+                "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+              },
+              {
+                "code": 5,
+                "description": "NETWORK_OR_API: Network failure or unexpected API response."
+              },
+              {
+                "code": 6,
+                "description": "NOT_FOUND: Requested resource does not exist."
+              },
+              {
+                "code": 7,
+                "description": "PERMISSION: Permission denied on the file system."
+              },
+              {
+                "code": 130,
+                "description": "INTERRUPTED: Input cancelled or process interrupted."
+              }
+            ]
+          },
+          {
+            "name": "test",
+            "description": "Check that a channel's webhook still works, without posting a message.",
+            "aliases": [
+              "check"
+            ],
+            "arguments": [
+              {
+                "name": "channel",
+                "description": "Channel name chosen by you: lower-case letters, digits, hyphen or underscore (e.g. deploys).",
+                "required": true
+              }
+            ],
+            "examples": [
+              "discordfy webhooks test deploys"
+            ],
+            "exitCodes": [
+              {
+                "code": 0,
+                "description": "SUCCESS: Operation completed."
+              },
+              {
+                "code": 1,
+                "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+              },
+              {
+                "code": 2,
+                "description": "USAGE: Invalid arguments, options or subcommand."
+              },
+              {
+                "code": 4,
+                "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+              },
+              {
+                "code": 5,
+                "description": "NETWORK_OR_API: Network failure or unexpected API response."
+              },
+              {
+                "code": 6,
+                "description": "NOT_FOUND: Requested resource does not exist."
+              },
+              {
+                "code": 7,
+                "description": "PERMISSION: Permission denied on the file system."
+              },
+              {
+                "code": 130,
+                "description": "INTERRUPTED: Input cancelled or process interrupted."
+              }
+            ]
+          },
+          {
+            "name": "edit",
+            "description": "Change the default name and avatar of the webhook in Discord.",
+            "arguments": [
+              {
+                "name": "channel",
+                "description": "Channel name chosen by you: lower-case letters, digits, hyphen or underscore (e.g. deploys).",
+                "required": true
+              }
+            ],
+            "options": [
+              {
+                "name": "--name",
+                "description": "New default display name (1 to 80 characters).",
+                "arguments": [
+                  {
+                    "name": "name",
+                    "required": true,
+                    "arity": {
+                      "minimum": 1,
+                      "maximum": 1
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "--avatar",
+                "description": "New default avatar: path to a PNG, JPEG or GIF, or an http(s) URL.",
+                "arguments": [
+                  {
+                    "name": "file-or-url",
+                    "required": true,
+                    "arity": {
+                      "minimum": 1,
+                      "maximum": 1
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "--remove-avatar",
+                "description": "Remove the custom avatar and return to the Discord default."
+              }
+            ],
+            "examples": [
+              "discordfy webhooks edit deploys --name \"Deploy bot\" --avatar ./bot.png",
+              "discordfy webhooks edit alerts --remove-avatar"
+            ],
+            "exitCodes": [
+              {
+                "code": 0,
+                "description": "SUCCESS: Operation completed."
+              },
+              {
+                "code": 1,
+                "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+              },
+              {
+                "code": 2,
+                "description": "USAGE: Invalid arguments, options or subcommand."
+              },
+              {
+                "code": 4,
+                "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+              },
+              {
+                "code": 5,
+                "description": "NETWORK_OR_API: Network failure or unexpected API response."
+              },
+              {
+                "code": 6,
+                "description": "NOT_FOUND: Requested resource does not exist."
+              },
+              {
+                "code": 7,
+                "description": "PERMISSION: Permission denied on the file system."
+              },
+              {
+                "code": 130,
+                "description": "INTERRUPTED: Input cancelled or process interrupted."
+              }
+            ]
+          },
+          {
+            "name": "rename",
+            "description": "Rename a channel, keeping its webhook.",
+            "aliases": [
+              "mv"
+            ],
+            "arguments": [
+              {
+                "name": "from",
+                "description": "Current channel name.",
+                "required": true
+              },
+              {
+                "name": "to",
+                "description": "New channel name.",
+                "required": true
+              }
+            ],
+            "examples": [
+              "discordfy webhooks rename alerts alerts-prod"
+            ],
+            "exitCodes": [
+              {
+                "code": 0,
+                "description": "SUCCESS: Operation completed."
+              },
+              {
+                "code": 1,
+                "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+              },
+              {
+                "code": 2,
+                "description": "USAGE: Invalid arguments, options or subcommand."
+              },
+              {
+                "code": 4,
+                "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+              },
+              {
+                "code": 5,
+                "description": "NETWORK_OR_API: Network failure or unexpected API response."
+              },
+              {
+                "code": 6,
+                "description": "NOT_FOUND: Requested resource does not exist."
+              },
+              {
+                "code": 7,
+                "description": "PERMISSION: Permission denied on the file system."
+              },
+              {
+                "code": 130,
+                "description": "INTERRUPTED: Input cancelled or process interrupted."
+              }
+            ]
+          },
+          {
+            "name": "remove",
+            "description": "Delete a channel's webhook from the vault. Asks for confirmation on a terminal.",
+            "aliases": [
+              "rm"
+            ],
+            "arguments": [
+              {
+                "name": "channel",
+                "description": "Channel name chosen by you: lower-case letters, digits, hyphen or underscore (e.g. deploys).",
+                "required": true
+              }
+            ],
+            "options": [
+              {
+                "name": "--yes",
+                "description": "Skip the confirmation.",
+                "aliases": [
+                  "-y"
+                ]
+              }
+            ],
+            "examples": [
+              "discordfy webhooks remove deploys --yes"
+            ],
+            "exitCodes": [
+              {
+                "code": 0,
+                "description": "SUCCESS: Operation completed."
+              },
+              {
+                "code": 1,
+                "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+              },
+              {
+                "code": 2,
+                "description": "USAGE: Invalid arguments, options or subcommand."
+              },
+              {
+                "code": 4,
+                "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+              },
+              {
+                "code": 5,
+                "description": "NETWORK_OR_API: Network failure or unexpected API response."
+              },
+              {
+                "code": 6,
+                "description": "NOT_FOUND: Requested resource does not exist."
+              },
+              {
+                "code": 7,
+                "description": "PERMISSION: Permission denied on the file system."
+              },
+              {
+                "code": 130,
+                "description": "INTERRUPTED: Input cancelled or process interrupted."
+              }
+            ]
+          }
+        ],
+        "exitCodes": [
+          {
+            "code": 0,
+            "description": "SUCCESS: Operation completed."
+          },
+          {
+            "code": 1,
+            "description": "GENERIC_ERROR: Unexpected failure without a specific classification."
+          },
+          {
+            "code": 2,
+            "description": "USAGE: Invalid arguments, options or subcommand."
+          },
+          {
+            "code": 4,
+            "description": "CREDENTIALS: credentials.json unreadable, master key missing or credential not found."
+          },
+          {
+            "code": 5,
+            "description": "NETWORK_OR_API: Network failure or unexpected API response."
+          },
+          {
+            "code": 6,
+            "description": "NOT_FOUND: Requested resource does not exist."
+          },
+          {
+            "code": 7,
+            "description": "PERMISSION: Permission denied on the file system."
+          },
+          {
+            "code": 130,
+            "description": "INTERRUPTED: Input cancelled or process interrupted."
+          }
+        ]
+      },
+      {
         "name": "tui",
-        "description": "Open the terminal interface (Overview and About). Requires a TTY.",
+        "description": "Open the terminal interface (Webhooks, Overview, Settings, Credentials, Docs and About). Requires a TTY.",
         "options": [
           {
             "name": "--tab",
@@ -94,7 +934,11 @@
                   "maximum": 1
                 },
                 "acceptedValues": [
+                  "webhooks",
                   "overview",
+                  "settings",
+                  "credentials",
+                  "docs",
                   "about"
                 ]
               }
@@ -102,8 +946,8 @@
           }
         ],
         "examples": [
-          "termfy",
-          "termfy tui --tab about"
+          "discordfy",
+          "discordfy tui --tab webhooks"
         ],
         "interactive": true,
         "exitCodes": [
@@ -129,8 +973,8 @@
         "name": "about",
         "description": "Show version, executable, runtime, platform and credits.",
         "examples": [
-          "termfy about",
-          "termfy about --json"
+          "discordfy about",
+          "discordfy about --json"
         ],
         "exitCodes": [
           {
@@ -149,7 +993,7 @@
       },
       {
         "name": "config",
-        "description": "Read and write preferences in ~/.termfy/settings.json.",
+        "description": "Read and write preferences in ~/.discordfy/settings.json.",
         "commands": [
           {
             "name": "list",
@@ -158,8 +1002,8 @@
               "ls"
             ],
             "examples": [
-              "termfy config list",
-              "termfy config list --json"
+              "discordfy config list",
+              "discordfy config list --json"
             ],
             "exitCodes": [
               {
@@ -199,7 +1043,7 @@
               }
             ],
             "examples": [
-              "termfy config get tui.initialTab"
+              "discordfy config get tui.initialTab"
             ],
             "exitCodes": [
               {
@@ -244,8 +1088,8 @@
               }
             ],
             "examples": [
-              "termfy config set output.format json",
-              "termfy config set output.colors false"
+              "discordfy config set output.format json",
+              "discordfy config set output.colors false"
             ],
             "exitCodes": [
               {
@@ -288,7 +1132,7 @@
               }
             ],
             "examples": [
-              "termfy config unset telemetry.enabled"
+              "discordfy config unset telemetry.enabled"
             ],
             "exitCodes": [
               {
@@ -321,7 +1165,7 @@
             "name": "path",
             "description": "Print the data directory and file paths.",
             "examples": [
-              "termfy config path"
+              "discordfy config path"
             ],
             "exitCodes": [
               {
@@ -342,7 +1186,7 @@
             "name": "schema",
             "description": "List the known keys with type, default and description.",
             "examples": [
-              "termfy config schema --json"
+              "discordfy config schema --json"
             ],
             "exitCodes": [
               {
@@ -389,7 +1233,7 @@
       },
       {
         "name": "credentials",
-        "description": "Store encrypted secrets (AES-256-GCM) in ~/.termfy/credentials.json.",
+        "description": "Store encrypted secrets (AES-256-GCM) in ~/.discordfy/credentials.json.",
         "aliases": [
           "cred"
         ],
@@ -411,8 +1255,8 @@
               }
             ],
             "examples": [
-              "termfy credentials set openai.api_key",
-              "printf '%s' \"$TOKEN\" | termfy credentials set github.token --stdin"
+              "discordfy credentials set openai.api_key",
+              "printf '%s' \"$TOKEN\" | discordfy credentials set github.token --stdin"
             ],
             "interactive": true,
             "exitCodes": [
@@ -459,8 +1303,8 @@
               }
             ],
             "examples": [
-              "termfy credentials get openai.api_key",
-              "termfy credentials get openai.api_key --reveal"
+              "discordfy credentials get openai.api_key",
+              "discordfy credentials get openai.api_key --reveal"
             ],
             "exitCodes": [
               {
@@ -496,7 +1340,7 @@
               "ls"
             ],
             "examples": [
-              "termfy credentials list --json"
+              "discordfy credentials list --json"
             ],
             "exitCodes": [
               {
@@ -539,7 +1383,7 @@
               }
             ],
             "examples": [
-              "termfy credentials remove github.token"
+              "discordfy credentials remove github.token"
             ],
             "exitCodes": [
               {
@@ -572,7 +1416,7 @@
             "name": "status",
             "description": "Show file, master key source and number of credentials.",
             "examples": [
-              "termfy credentials status"
+              "discordfy credentials status"
             ],
             "exitCodes": [
               {
@@ -602,7 +1446,7 @@
               }
             ],
             "examples": [
-              "termfy credentials clear --yes"
+              "discordfy credentials clear --yes"
             ],
             "interactive": true,
             "exitCodes": [
@@ -638,7 +1482,7 @@
             "options": [
               {
                 "name": "--from-env",
-                "description": "Use TERMFY_MASTER_KEY (64 hex characters) as the new key; read the current key from master.key."
+                "description": "Use DISCORDFY_MASTER_KEY (64 hex characters) as the new key; read the current key from master.key."
               }
             ],
             "exitCodes": [
@@ -706,8 +1550,8 @@
           }
         ],
         "examples": [
-          "termfy mcp",
-          "termfy mcp --list --json"
+          "discordfy mcp",
+          "discordfy mcp --list --json"
         ],
         "exitCodes": [
           {
@@ -747,9 +1591,9 @@
           }
         ],
         "examples": [
-          "termfy skill",
-          "termfy skill mcp",
-          "termfy --skill cli"
+          "discordfy skill",
+          "discordfy skill mcp",
+          "discordfy --skill cli"
         ],
         "exitCodes": [
           {
@@ -820,12 +1664,12 @@
       }
     ],
     "examples": [
-      "termfy",
-      "termfy about --json",
-      "termfy config set output.format json",
-      "termfy credentials set openai.api_key",
-      "termfy mcp",
-      "termfy --skill"
+      "discordfy",
+      "discordfy webhooks add deploys",
+      "discordfy webhooks list",
+      "discordfy send deploys \"Deploy finished\" --title \"v1.4.0\" --color green",
+      "discordfy mcp",
+      "discordfy --skill"
     ],
     "exitCodes": [
       {

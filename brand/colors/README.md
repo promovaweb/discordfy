@@ -1,18 +1,11 @@
-# Paleta do Termfy Starter Kit
+# Paleta do Discordfy
 
-| Família | Base | Papel |
+| Cor | Valor | Uso |
 | --- | --- | --- |
-| Petróleo | `#00161E` | estrutura, texto e superfícies escuras |
-| Turquesa | `#2AD5BE` | janela do terminal e vínculo com a Promovaweb |
-| Lima | `#A3E635` | conector com agentes pelo MCP |
+| Petróleo | `#00161E` | Placa do ícone e contorno sobre fundo claro |
+| Menta | `#C6F4ED` | Balão sobre fundo escuro |
+| Blurple | `#5865F2` | Símbolo de canal sobre fundo escuro |
+| Blurple escuro | `#4752C4` | Símbolo de canal e texto de destaque sobre fundo claro |
+| Blurple claro | `#ADB5FF` | Texto de destaque sobre fundo escuro |
 
-O símbolo usa lima `#A3E635` (500) sobre petróleo e `#4D7C0F` (600) na versão
-para fundo claro. A escala do acento segue a escala `lime` do Tailwind,
-ajustada para manter esses dois valores.
-
-No light mode, use acento textual `#4D7C0F`. No dark mode, use `#A3E635`.
-A escala completa e os estados ficam em `palette.json`; os pares aprovados
-ficam em `../accessibility.md`.
-
-Esta paleta vale para a marca do projeto no GitHub. As cores da TUI do
-binário ficam em `src/tui/theme.ts`.
+Consulte as escalas em [palette.json](palette.json) e os pares de contraste em [accessibility.md](../accessibility.md).

@@ -1,10 +1,9 @@
 /**
- * Tema Tailwind do Termfy Starter Kit, no padrão do Brandfy.
+ * Tema Tailwind gerado pelo Brandfy.
  *
  * Fonte editável: brand/colors/palette.json.
  * Importe colors em theme.extend.colors no Tailwind CSS 3 ou use os mesmos
- * tokens em @theme quando o projeto adotar Tailwind CSS 4. A classe
- * `accent` usa o tom semântico do modo; `accent-500` e vizinhos dão a escala.
+ * tokens em @theme quando o projeto adotar Tailwind CSS 4.
  */
 
 export const colors = {
@@ -21,20 +20,7 @@ export const colors = {
     "900": "var(--color-primary-900)",
     "950": "var(--color-primary-950)"
   },
-  "accent": {
-    "50": "var(--color-accent-50)",
-    "100": "var(--color-accent-100)",
-    "200": "var(--color-accent-200)",
-    "300": "var(--color-accent-300)",
-    "400": "var(--color-accent-400)",
-    "500": "var(--color-accent-500)",
-    "600": "var(--color-accent-600)",
-    "700": "var(--color-accent-700)",
-    "800": "var(--color-accent-800)",
-    "900": "var(--color-accent-900)",
-    "950": "var(--color-accent-950)",
-    "DEFAULT": "var(--color-accent)"
-  },
+  "accent": "var(--color-accent)",
   "neutral": {
     "50": "var(--color-neutral-50)",
     "100": "var(--color-neutral-100)",

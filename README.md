@@ -1,206 +1,233 @@
-# Termfy Starter Kit
-
 <p align="center">
-  <a href="https://promovaweb.com/termfy/">
+  <a href="https://promovaweb.com/discordfy/">
     <picture>
-      <source type="image/svg+xml" srcset="brand/logo/icon.svg">
-      <img alt="Termfy Starter Kit" src="brand/logo/icon.png" width="112" height="112">
+      <source type="image/svg+xml" srcset="https://raw.githubusercontent.com/promovaweb/discordfy/main/brand/logo/icon.svg">
+      <img alt="Discordfy" src="https://raw.githubusercontent.com/promovaweb/discordfy/main/brand/logo/icon.png" width="112" height="112">
     </picture>
   </a>
 </p>
 
+<h1 align="center">Discordfy</h1>
+
 <p align="center">
-  <a href="https://promovaweb.com/termfy/">Portal do Termfy</a> ·
-  <a href="https://promovaweb.com/docs/termfy/">Documentação</a> ·
-  <a href="https://promovaweb.com/harness/">Harness</a> ·
-  <a href="https://promovaweb.com/ferramentas/">Ferramentas</a>
+  Seu agente e seus scripts avisam o time no Discord, no canal certo, com mensagens ricas.
 </p>
 
 <p align="center">Um projeto da <a href="https://promovaweb.com">Promovaweb</a></p>
 
-Esqueleto de binário em [Bun](https://bun.sh) para construir ferramentas de
-terminal com três modos no mesmo executável. É o template do GitHub do
-framework [Termfy](https://github.com/promovaweb/termfy), e já vem com as
-skills do framework instaladas em `.agents/skills/`.
+<p align="center">
+  <a href="https://github.com/promovaweb/discordfy/releases/latest"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/promovaweb/discordfy"></a>
+  <a href="https://www.npmjs.com/package/@promovaweb/discordfy"><img alt="npm" src="https://img.shields.io/npm/v/@promovaweb/discordfy"></a>
+  <a href="https://github.com/promovaweb/discordfy/blob/main/LICENSE"><img alt="Licença" src="https://img.shields.io/github/license/promovaweb/discordfy"></a>
+</p>
 
-| Modo | Entrada | Para quem |
+<p align="center">
+  <a href="https://promovaweb.com/discord"><img alt="Discord: obter ajuda e conversar com a Comunidade" src="https://img.shields.io/badge/Discord-Obter%20ajuda%20e%20conversar%20com%20a%20Comunidade-5865F2?style=for-the-badge&logo=discord&logoColor=white"></a>
+</p>
+
+<p align="center">
+  <a href="https://promovaweb.com/discordfy/">Site do Discordfy</a> ·
+  <a href="https://github.com/promovaweb/discordfy/tree/main/docs/user">Guia do Usuário</a> ·
+  <a href="https://promovaweb.com/harness/">Harness</a> ·
+  <a href="https://promovaweb.com/ferramentas/">Ferramentas</a> ·
+  <a href="https://promovaweb.com/discord">Discord</a> ·
+  <a href="https://promovaweb.com/planos?utm_source=github&utm_medium=readme&utm_campaign=discordfy">Planos da Promovaweb</a> ·
+  <a href="https://github.com/promovaweb/discordfy/blob/main/CHANGELOG.md">Changelog</a>
+</p>
+
+## O que é
+
+O Discordfy guarda o webhook de cada canal do Discord com um nome curto
+(`deploys`, `alertas`, `time-dev`) e envia mensagens ricas para o canal que
+você indicar. O canal é sempre nomeado no envio, então nenhuma mensagem sai
+para um destino implícito. O mesmo binário abre três modos:
+
+| Modo | Como abrir | Para quê |
 | --- | --- | --- |
-| TUI | `termfy` sem argumentos, em terminal interativo | pessoas |
-| CLI | `termfy <command> [options]`, saída em texto ou `--json` | pessoas, scripts e agentes |
-| MCP | `termfy mcp`, servidor Model Context Protocol via stdio | agentes de IA |
+| TUI | `discordfy` | ver os webhooks cadastrados (canal e endereço), cadastrar, testar e enviar |
+| CLI | `discordfy send <canal> ...` | scripts, CI, hooks e cron, com saída em texto ou `--json` |
+| MCP | `discordfy mcp` | seu agente de IA reporta progresso e resultados no Discord do time |
 
-Os três modos compartilham identidade, configuração (`~/.termfy/settings.json`),
-cofre de credenciais cifrado (`~/.termfy/credentials.json`) e a tabela de
-exit codes. A TUI usa o [OpenTUI](https://opentui.com); o CLI publica sua
-interface no formato [OpenCLI](https://opencli.org); o MCP usa o
-[SDK oficial](https://github.com/modelcontextprotocol/typescript-sdk).
+As URLs ficam cifradas (AES-256-GCM) em `~/.discordfy/credentials.json`. O
+token nunca aparece em listagem, log ou tool do MCP sem que você peça.
 
-Todo o código é em inglês: arquivos, identificadores, comentários, mensagens,
-commands, options, keys e campos do `--json`. A documentação é em português.
+## Instalação
 
-```text
-
-   ▌ Termfy  v0.13.0                                                        linux-x64 · Bun 1.4.4
-
-   1 ⌂ Overview    2 ⚙ Settings    3 ◈ Credentials    4 ≡ Docs    5 ℹ About
-   ━━━━━━━━━━━━
-
-   ENVIRONMENT                                      STATE
-   ╭───────────────────────────────────────────╮    ╭───────────────────────────────────────────╮
-   │                                           │    │                                           │
-   │  Binary     termfy v0.13.0                │    │  Settings     • defaults                  │
-   │  Runtime    Bun 1.4.4                     │    │  Vault        • empty                     │
-   │  Platform   linux-x64                     │    │  Master key   not created                 │
-   │                                           │    │                                           │
-   ╰───────────────────────────────────────────╯    ╰───────────────────────────────────────────╯
-
-   NEXT STEPS
-   ╭────────────────────────────────────────────────────────────────────────────────────────────╮
-   │                                                                                            │
-   │  IN THE TERMINAL                               FOR AGENTS                                  │
-   │  → termfy --help                               { "command": "termfy",                      │
-   │  → termfy credentials set <name>                 "args": ["mcp"] }                         │
-   │  → termfy --skill                                                                          │
-   │                                                                                            │
-   │  [c] copy MCP config    [r] reload                                                         │
-   │                                                                                            │
-   ╰────────────────────────────────────────────────────────────────────────────────────────────╯
-
-
-
-   0 credentials · defaults  r reload  c copy MCP config  ? help  q quit             ^K commands
-
-```
-
-## Sobre o template
-
-Este repositório é um template do GitHub. Clique em **Use this template**,
-abra o clone no agente e peça: "Use termfy-init para fazer o setup deste
-projeto". Informe o nome do executável e o propósito da ferramenta. O agente
-conduz a configuração e as verificações pela skill.
-
-A pasta [brand/](brand/README.md) é a marca deste template no GitHub. Num
-projeto criado a partir dele, troque `brand/` e o cabeçalho deste README pela
-sua marca ou remova os dois.
-
-O guia completo está em [docs/customize-template.md](docs/customize-template.md).
-Para atualizar ou reparar as skills, use `termfy-init` no modo de
-manutenção. O guia do método e o ebook ficam no
-[framework](https://github.com/promovaweb/termfy).
-
-## Requisitos
-
-Bun 1.4.4 ou superior. Node.js não é usado.
-
-## Rodar em desenvolvimento
+Com npm (baixa o binário da sua plataforma na primeira execução):
 
 ```bash
-bun install
-bun run dev                 # TUI
-bun run dev -- --help       # help do CLI
-bun run dev -- about --json
-bun run dev -- mcp --list
+npm i -g @promovaweb/discordfy
+discordfy --version
 ```
 
-## Commands
+Ou baixe o executável em
+[Releases](https://github.com/promovaweb/discordfy/releases/latest):
+`discordfy-linux-x64`, `discordfy-linux-arm64`, `discordfy-darwin-x64`,
+`discordfy-darwin-arm64` ou `discordfy-windows-x64.exe`, confira o
+`SHA256SUMS`, dê permissão de execução e coloque no `PATH`.
 
-| Command | Função |
-| --- | --- |
-| `termfy` | abre a TUI com as abas Overview, Settings, Credentials, Docs e About |
-| `termfy tui [--tab overview\|settings\|credentials\|docs\|about]` | abre a TUI em uma aba |
-| `termfy about` | version, executable, runtime, platform e credits |
-| `termfy config list\|get\|set\|unset\|path\|schema` | preferências em `settings.json` |
-| `termfy credentials set\|get\|list\|remove\|status\|clear` | segredos cifrados em `credentials.json` |
-| `termfy mcp [--list]` | servidor MCP via stdio |
-| `termfy skill [topic]` | documentação embutida |
+### Instalar a skill no agente
 
-Options globais: `--help`, `--version`, `--json`, `--skill [topic]`,
-`--opencli`, `--no-color`. Referência completa em [docs/cli.md](docs/cli.md).
-
-## Documentação embutida
+A skill `discordfy` ensina Claude Code, Codex, OpenCode e outros agentes a
+escolher o canal, montar o embed e enviar:
 
 ```bash
-termfy --skill            # tudo, em Markdown
-termfy --skill mcp        # uma seção: cli, tui, mcp, config, exit-codes
-termfy --opencli          # descrição OpenCLI em JSON
+npx skills add promovaweb/discordfy
 ```
 
-A pasta [docs/](docs/README.md) entra no binário em tempo de build. Um agente
-lê a documentação sem acesso ao repositório.
+## Primeiros passos
 
-## Exit codes
+1. No Discord, abra **Editar canal > Integrações > Webhooks > Novo webhook** e
+   clique em **Copiar URL do webhook**.
+2. Cadastre o canal. A URL é pedida sem eco e conferida no Discord:
 
-| Code | Name |
-| --- | --- |
-| 0 | `SUCCESS` |
-| 1 | `GENERIC_ERROR` |
-| 2 | `USAGE` |
-| 3 | `CONFIG` |
-| 4 | `CREDENTIALS` |
-| 5 | `NETWORK_OR_API` |
-| 6 | `NOT_FOUND` |
-| 7 | `PERMISSION` |
-| 8 | `NO_TTY` |
-| 9 | `MCP` |
-| 130 | `INTERRUPTED` |
+   ```bash
+   discordfy webhooks add deploys
+   ```
 
-Detalhes em [docs/exit-codes.md](docs/exit-codes.md).
+3. Envie a primeira mensagem:
 
-## Configuração e credenciais
+   ```bash
+   discordfy send deploys "Olá, time!"
+   ```
+
+## Uso
+
+### Mensagens ricas
 
 ```bash
-termfy config set tui.theme day
-termfy credentials set openai.api_key        # digita sem eco
-printf '%s' "$TOKEN" | termfy credentials set github.token --stdin
-termfy credentials status
+discordfy send deploys \
+  --title "Deploy v1.4.0" --url "https://github.com/acme/app/releases/tag/v1.4.0" \
+  --description "Todos os testes passaram.\nTempo total: **42s**" \
+  --color green --inline-field "Branch=main" --inline-field "Commit=a1b2c3d" \
+  --field "Mudanças=3 correções e 1 recurso" \
+  --author "GitHub Actions" --author-icon "https://github.githubassets.com/favicons/favicon.png" \
+  --thumbnail "https://example.com/logo.png" --footer "CI" --timestamp
 ```
 
-Os arquivos ficam em `~/.termfy/` com permissão 0600. As credenciais são
-cifradas com AES-256-GCM; a master key vem de `TERMFY_MASTER_KEY` ou de
-`~/.termfy/master.key`. Veja [docs/configuration.md](docs/configuration.md).
+Cada elemento do embed tem sua option: título e link, descrição com Markdown,
+cor (nome, `#RRGGBB` ou decimal), autor com link e ícone, campos empilhados ou
+lado a lado, imagem, miniatura, rodapé com ícone e horário. Também é possível
+trocar o nome e o avatar da mensagem, entregar sem notificação (`--silent`),
+esconder prévias de links, postar num tópico ou criar um post de fórum. As
+menções (`@everyone`, cargos, usuários) saem desligadas até você usar
+`--allow-mentions`. Use `--dry-run` para ver o JSON antes de enviar.
 
-## MCP
+### Payload completo
+
+Tem um JSON pronto do Embed Visualizer ou do Discohook? Envie como está. O
+Discordfy aceita `embeds` e o formato antigo `embed`:
+
+```bash
+discordfy send deploys --payload examples/embed-visualizer.json
+cat mensagem.json | discordfy send deploys --payload -
+```
+
+### Gerenciar webhooks
+
+```bash
+discordfy webhooks list                 # canal e endereço, token mascarado
+discordfy webhooks test deploys         # confere no Discord sem postar
+discordfy webhooks edit deploys --name "Deploy bot" --avatar ./bot.png
+discordfy webhooks rename deploys prod-deploys
+discordfy webhooks remove prod-deploys
+```
+
+### Abrir a TUI
+
+`discordfy` sem argumentos abre a aba **Webhooks**, com o canal e o endereço
+de cada webhook. `a` cadastra, `s` envia uma mensagem ao canal selecionado,
+`t` testa, `v` revela ou mascara as URLs, `d` remove e `?` mostra todas as
+teclas.
+
+### Usar no CI
+
+```yaml
+- name: Avisar no Discord
+  env:
+    DISCORDFY_MASTER_KEY: ${{ secrets.DISCORDFY_MASTER_KEY }}
+    DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_DEPLOYS }}
+  run: |
+    npm i -g @promovaweb/discordfy
+    printf '%s' "$DISCORD_WEBHOOK" | discordfy webhooks add deploys --stdin --no-verify
+    discordfy send deploys --title "Deploy ${{ github.ref_name }}" --color green --timestamp
+```
+
+### Saída para scripts
+
+Com `--json`, toda resposta segue o envelope `{ ok, command, data }` ou
+`{ ok, command, error }`. O exit code diz a classe da falha: `2` uso ou limite
+do Discord, `4` cofre, `5` rede ou Discord, `6` canal sem webhook.
+
+## Uso com agentes
+
+Configure o servidor MCP no seu cliente:
+
+```bash
+claude mcp add discordfy -- discordfy mcp
+```
 
 ```json
-{ "mcpServers": { "termfy": { "command": "termfy", "args": ["mcp"] } } }
+{ "mcpServers": { "discordfy": { "command": "discordfy", "args": ["mcp"] } } }
 ```
 
-Tools: `about`, `exit_codes`, `skill`, `config_list`, `config_get`,
-`credentials_status`. Resources: `termfy://about`, `termfy://exit-codes`,
-`termfy://skill`, `termfy://skill/{topic}`. Prompt: `operate`.
-Detalhes em [docs/mcp.md](docs/mcp.md).
+| Tool | Função |
+| --- | --- |
+| `webhooks_list` | canais cadastrados, sem o token |
+| `discord_send` | envia texto, embeds ou o payload completo ao canal indicado |
+| `webhook_test` | confere um webhook sem postar |
+| `webhook_edit` | muda o nome e o avatar padrão do webhook no Discord |
 
-## Estrutura
+Peça ao agente, por exemplo: "quando terminar, reporte no canal `time-dev` o
+que mudou, os testes e o link do PR".
 
-```text
-src/        código do binário (app, cli, config, mcp, tui, skill)
-docs/       documentação embutida e opencli.json
-template/   stubs de command, screen e tool
-.agents/    skills do framework instaladas via npx skills (skills-lock.json)
-scripts/    build, init e checks
-tests/      bun test
-brand/      marca do template no GitHub (troque ou remova no projeto derivado)
-```
+## Documentação
 
-Arquitetura em [docs/architecture.md](docs/architecture.md).
+- [Site do Discordfy](https://promovaweb.com/discordfy/)
+- [Guia do Usuário](docs/user/README.md), também em [PDF e EPUB](ebook/)
+- Referência embutida: `discordfy --skill` (CLI, TUI, MCP, configuração e
+  exit codes)
+- [Skill](skills/discordfy/SKILL.md) e suas
+  [referências](skills/discordfy/references/)
 
-## Validar, compilar e publicar
+## Feito com
 
-```bash
-bun run validate      # typecheck, testes, skills:check, opencli:check, docs:check, build
-bun run build         # dist/termfy
-bun run build:all     # linux-x64, linux-arm64, darwin-x64, darwin-arm64, windows-x64
-```
+| Projeto | Para quê |
+| --- | --- |
+| [Bun](https://github.com/oven-sh/bun) | runtime e compilação do binário |
+| [Termfy](https://github.com/promovaweb/termfy) | starter kit com TUI, CLI e MCP no mesmo executável |
+| [OpenTUI](https://github.com/sst/opentui) | interface do terminal |
+| [Model Context Protocol SDK](https://github.com/modelcontextprotocol/typescript-sdk) | servidor MCP |
+| [Discord Webhooks](https://docs.discord.com/developers/resources/webhook) | envio das mensagens |
 
-Releases seguem [docs/release.md](docs/release.md): versão em
-`package.json`, entrada no `CHANGELOG.md`, tag `vX.Y.Z` e GitHub Release com
-binários gerados pelo workflow. O guia do método em PDF e EPUB fica no
-framework, não aqui.
+## Comunidade e suporte
+
+- **Discord:** [obter ajuda e conversar com a Comunidade](https://promovaweb.com/discord).
+- **Bugs e pedidos:** abra uma [issue](https://github.com/promovaweb/discordfy/issues)
+  com a versão, o sistema operacional e o passo a passo para reproduzir.
+- **Novidades:** acompanhe o [CHANGELOG](https://github.com/promovaweb/discordfy/blob/main/CHANGELOG.md)
+  e as [releases](https://github.com/promovaweb/discordfy/releases).
+
+## Contribuir
+
+Este README cobre o uso. Para ambiente de desenvolvimento, organização do
+código, validação e releases, leia o
+[CONTRIBUTING.md](https://github.com/promovaweb/discordfy/blob/main/CONTRIBUTING.md).
+
+## Promovaweb
+
+O Discordfy é mantido pela [Promovaweb](https://promovaweb.com), comunidade de
+co-working digital onde profissionais aprendem a construir, automatizar e
+gerir negócios de tecnologia e IA com aulas ao vivo, Co-works e revisão de
+projetos reais.
+
+Quer usar o Discordfy em projetos de verdade, com acompanhamento? Conheça os
+[planos da Promovaweb](https://promovaweb.com/planos?utm_source=github&utm_medium=readme&utm_campaign=discordfy).
 
 ## Licença
 
-Distribuído sob a [licença MIT](LICENSE), porque o starter kit é a base do
-binário de quem usa: a ferramenta que você cria a partir dele é sua e pode ter
-a licença que você escolher. O framework [Termfy](https://github.com/promovaweb/termfy),
-com as skills e o método, segue sob a GNU AGPL 3.0. A licença não concede o uso
-do nome e do logo do Termfy nem da marca Promovaweb.
+Distribuído sob a
+[GNU AGPL 3.0](https://github.com/promovaweb/discordfy/blob/main/LICENSE).
+A licença não concede o uso do nome e do logo do Discordfy nem da marca
+Promovaweb (AGPL 3.0, seção 7, item e). Discord é marca da Discord Inc.; o
+Discordfy é um projeto independente.

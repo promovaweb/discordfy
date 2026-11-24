@@ -47,6 +47,107 @@ Em erro:
 O exit code do processo é sempre o mesmo de `error.code`. Um agente deve ler
 os dois: o envelope para a mensagem, o code para a classe da falha.
 
+## Commands do Discordfy
+
+| Command | Função |
+| --- | --- |
+| `send <channel> [message]` | Envia uma mensagem rica ao canal salvo. O canal é obrigatório. |
+| `webhooks add <channel>` | Salva a URL do webhook do canal, lida sem eco ou por stdin, conferida no Discord. |
+| `webhooks list [--reveal]` | Lista canais e endereços com o token mascarado. |
+| `webhooks show <channel> [--reveal]` | Mostra o webhook de um canal. |
+| `webhooks test <channel>` | Confere o webhook no Discord sem postar nada. |
+| `webhooks edit <channel>` | Muda o nome e o avatar padrão do webhook no Discord. |
+| `webhooks rename <from> <to>` | Renomeia o canal local, mantendo o webhook. |
+| `webhooks remove <channel> [--yes]` | Apaga o webhook do cofre local. |
+
+### Canais e webhooks
+
+Cada canal é um nome escolhido por você (`deploys`, `alertas`, `time-dev`):
+letras minúsculas, números, hífen e sublinhado, até 48 caracteres. `#Deploys`
+vira `deploys`. O nome aponta para uma URL de webhook do Discord, guardada no
+cofre cifrado como a credencial `webhook.<channel>`. A URL carrega o token
+que permite postar, então ela é um segredo: `webhooks add` nunca a recebe
+como argument, e as listagens mascaram o token, salvo com `--reveal`.
+
+Copie a URL no Discord em Editar canal > Integrações > Webhooks > Novo
+webhook > Copiar URL do webhook. `webhooks add` aceita `discord.com`,
+`discordapp.com`, `ptb` e `canary`, com ou sem versão da API, e grava a
+forma canônica `https://discord.com/api/webhooks/<id>/<token>`.
+
+| Option de `webhooks add` | Efeito |
+| --- | --- |
+| `--stdin` | Lê a URL da primeira linha de stdin. |
+| `-f`, `--force` | Substitui o webhook de um canal existente. |
+| `--no-verify` | Salva sem conferir no Discord (uso offline e CI). |
+
+| Option de `webhooks edit` | Efeito |
+| --- | --- |
+| `--name <name>` | Novo nome padrão (1 a 80 caracteres, sem "discord" nem "clyde"). |
+| `--avatar <file-or-url>` | Novo avatar: PNG, JPEG ou GIF local ou URL http(s), até 8 MB. |
+| `--remove-avatar` | Volta ao avatar padrão do Discord. |
+
+`webhooks rename` muda só o apelido local; `webhooks edit` muda o webhook no
+Discord. `webhooks remove` apaga a cópia local; o webhook continua no Discord
+até ser excluído lá.
+
+### Enviar mensagens
+
+`send` recebe o canal e o texto. O resto das options monta um embed. Sem
+texto, a mensagem precisa de pelo menos título, descrição, campo, autor,
+imagem, um `--embed` ou um `--payload`.
+
+| Option de `send` | Efeito |
+| --- | --- |
+| `--stdin` | Lê o texto de stdin. |
+| `-t`, `--title <text>` | Título do embed (256). |
+| `-d`, `--description <text>` | Descrição do embed (4096), com Markdown. |
+| `--url <url>` | Link do título. |
+| `-c`, `--color <color>` | Cor: nome, `#RRGGBB` ou decimal. |
+| `--field <name=value>` | Campo empilhado. Repetível (até 25). |
+| `--inline-field <name=value>` | Campo lado a lado. Repetível. |
+| `--embed <json>` | Embed extra em JSON ou `@arquivo.json`. Repetível (até 10 por mensagem). |
+| `--author <name>` | Linha de autor. |
+| `--author-url <url>` | Link do autor. |
+| `--author-icon <url>` | Ícone do autor. |
+| `--footer <text>` | Rodapé (2048). |
+| `--footer-icon <url>` | Ícone do rodapé. |
+| `--image <url>` | Imagem grande. |
+| `--thumbnail <url>` | Miniatura no canto superior direito. |
+| `--timestamp [when]` | Horário: `now` (padrão sem valor) ou data ISO 8601. |
+| `-u`, `--username <name>` | Nome de exibição desta mensagem. Padrão: `send.username`. |
+| `--avatar-url <url>` | Avatar desta mensagem. Padrão: `send.avatarUrl`. |
+| `--tts` | Leitura em voz alta. |
+| `--silent` | Entrega sem notificação push (flag `SUPPRESS_NOTIFICATIONS`). |
+| `--suppress-embeds` | Esconde as prévias de links do texto (flag `SUPPRESS_EMBEDS`). |
+| `--thread-id <id>` | Posta num tópico existente. |
+| `--thread-name <name>` | Cria um post em canal de fórum. |
+| `--payload <file>` | Corpo JSON completo; `-` lê stdin. Aceita `embeds` e o formato antigo `embed`. |
+| `--allow-mentions` | Libera notificações de `@everyone`, `@here`, cargos e usuários. |
+| `--dry-run` | Imprime o JSON que seria enviado, sem chamar o Discord. |
+
+Use `\n` para quebrar linha no texto, na descrição e nos campos. Cores com
+nome: `blurple`, `green`, `success`, `yellow`, `warning`, `red`, `error`,
+`info`, `blue`, `orange`, `fuchsia`, `grey`, `white`, `black`.
+
+As menções saem desligadas (`allowed_mentions.parse = []`): o texto mostra
+`@everyone` e cargos, mas ninguém é notificado sem `--allow-mentions`.
+
+Com `--payload`, as options da linha de comando sobrescrevem os campos do topo
+do arquivo e acrescentam embeds. Campos que webhooks não podem definir
+(`type`, `provider`, `video`, dimensões de imagem) são descartados. O
+exemplo completo do Embed Visualizer está em `examples/embed-visualizer.json`.
+
+Antes de chamar o Discord, `send` confere os limites: texto 2000, 10 embeds,
+título 256, descrição 4096, 25 campos de 256 e 1024, rodapé 2048, autor 256,
+6000 caracteres somados nos embeds e nome de exibição 80. Fora disso, sai com
+exit code 2 indicando o campo.
+
+A resposta em `--json` traz `data.message` com `id`, `channel_id` e
+`timestamp` da mensagem criada (o envio usa `?wait=true`). Um HTTP 429 com
+espera de até 10 segundos é repetido uma vez; o Discord aceita cerca de 30
+mensagens por minuto por webhook. HTTP 401 ou 404 indicam webhook excluído:
+salve uma URL nova com `webhooks add --force`.
+
 ## Commands do esqueleto
 
 | Command | Função |

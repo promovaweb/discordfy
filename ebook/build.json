@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "version": "0.1.0",
+  "edition": "v0.1.0",
+  "generated_at": "2026-11-24T10:03:23Z",
+  "source_sha256": "2c08898f70728898b22a7d0d526e6ef3112c8804d62cbb456f85bcfc8eee33e4",
+  "sources": [
+    ".ebook/build-ebook.mjs",
+    ".ebook/epub.css",
+    ".ebook/extract-document-metadata.mjs",
+    ".ebook/metadata.yaml",
+    ".ebook/pdf.css",
+    ".ebook/prune-editions.mjs",
+    ".ebook/template.html",
+    "brand/fonts/fonts.css",
+    "brand/fonts/inter-latin.woff2",
+    "brand/fonts/manrope-latin.woff2",
+    "brand/logo/icon.png",
+    "brand/logo/icon.svg",
+    "docs/user/01-introducao-e-instalacao.md",
+    "docs/user/02-canais-e-webhooks.md",
+    "docs/user/03-primeira-mensagem.md",
+    "docs/user/04-mensagens-ricas-com-embeds.md",
+    "docs/user/05-payload-completo.md",
+    "docs/user/06-seu-agente-no-discord.md",
+    "docs/user/07-automacoes.md",
+    "docs/user/08-seguranca-e-referencia.md",
+    "docs/user/README.md",
+    "docs/user/reading-order.txt",
+    "ebook/VERSION"
+  ],
+  "document_metadata": {},
+  "artifacts": {
+    "pdf": {
+      "file": "Discordfy-Guia-do-Usuario-v0.1.0.pdf",
+      "sha256": "f46a7ec05547cc7e569cff3d0bad29f7049d0bc5acc998700c6559cb7a2cd111"
+    },
+    "epub": {
+      "file": "Discordfy-Guia-do-Usuario-v0.1.0.epub",
+      "sha256": "d10b18552cc66b7a4f2a84cdc65b36669d3f8b96f5da7e2051ed7847398d401e"
+    }
+  }
+}

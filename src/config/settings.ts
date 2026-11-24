@@ -42,8 +42,8 @@ export const SETTINGS_SCHEMA: readonly SettingDefinition[] = Object.freeze([
   {
     key: "tui.initialTab",
     type: "enum",
-    default: "overview",
-    values: ["overview", "settings", "credentials", "docs", "about"],
+    default: "webhooks",
+    values: ["webhooks", "overview", "settings", "credentials", "docs", "about"],
     description: "Tab opened when the TUI starts.",
   },
   {
@@ -71,6 +71,18 @@ export const SETTINGS_SCHEMA: readonly SettingDefinition[] = Object.freeze([
     type: "boolean",
     default: true,
     description: "Mouse support in the TUI: click tabs, key bar items, help rows and list rows; wheel scrolls. Turn off to let the terminal select text.",
+  },
+  {
+    key: "send.username",
+    type: "string",
+    default: "",
+    description: "Display name used by send when --username is not given. Empty keeps the name set on the webhook in Discord. Discord rejects names containing \"discord\" or \"clyde\".",
+  },
+  {
+    key: "send.avatarUrl",
+    type: "string",
+    default: "",
+    description: "Avatar image URL used by send when --avatar-url is not given. Empty keeps the webhook avatar.",
   },
   {
     key: "telemetry.enabled",

@@ -18,7 +18,7 @@ beforeAll(async () => {
   process.env[HOME_VARIABLE] = dir;
   delete process.env[MASTER_KEY_VARIABLE];
   setup = await createTestRenderer({ width: 120, height: 32 });
-  closed = mountTui(setup.renderer, { motion: false });
+  closed = mountTui(setup.renderer, { initialTab: "overview", motion: false });
   await setup.renderOnce();
 });
 
@@ -46,8 +46,8 @@ describe("tui", () => {
     expect(frame).toContain("quit");
   });
 
-  test("key 5 goes to About and ? opens the help", async () => {
-    setup.mockInput.pressKey("5");
+  test("key 6 goes to About and ? opens the help", async () => {
+    setup.mockInput.pressKey("6");
     await setup.renderOnce();
     let frame = setup.captureCharFrame();
     expect(frame).toContain("CREDITS");

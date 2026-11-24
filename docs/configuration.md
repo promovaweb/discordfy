@@ -20,11 +20,13 @@ Keys em notação de ponto. O schema do esqueleto:
 | `output.format` | `text` ou `json` | `text` | formato padrão da saída do CLI |
 | `output.colors` | boolean | `true` | cores ANSI na saída de texto |
 | `tui.icons` | `auto`, `nerd`, `unicode` ou `ascii` | `auto` | conjunto de ícones da TUI; `auto` usa `nerd` no Ghostty, no Kitty, no WezTerm e no Omarchy, `ascii` no console Linux e `unicode` nos demais terminais |
-| `tui.initialTab` | `overview`, `settings`, `credentials`, `docs` ou `about` | `overview` | aba aberta ao iniciar a TUI |
+| `tui.initialTab` | `webhooks`, `overview`, `settings`, `credentials`, `docs` ou `about` | `webhooks` | aba aberta ao iniciar a TUI |
 | `tui.motion` | boolean | `true` | animações curtas de diálogos e toasts; `false` deixa a interface estática |
 | `tui.mouse` | boolean | `true` | mouse na TUI: clique, hover e roda. `false` devolve a seleção de texto ao terminal |
 | `tui.theme` | `terminal`, `night` ou `day` | `terminal` | paleta da TUI |
-| `telemetry.enabled` | boolean | `false` | reservado para projetos derivados |
+| `send.username` | texto | vazio | nome de exibição usado por `send` e `discord_send` sem `--username`; vazio mantém o nome do webhook. O Discord recusa nomes com "discord" ou "clyde" |
+| `send.avatarUrl` | texto | vazio | URL do avatar usado por `send` e `discord_send` sem `--avatar-url`; vazio mantém o avatar do webhook |
+| `telemetry.enabled` | boolean | `false` | reservado; o Discordfy não envia telemetria |
 
 Commands:
 
@@ -40,6 +42,20 @@ Commands:
 Keys fora do schema são aceitas como texto. Para que uma key nova ganhe tipo,
 padrão e documentação, acrescente-a a `SETTINGS_SCHEMA` em
 `src/config/settings.ts`.
+
+## Webhooks no cofre
+
+Cada webhook fica em `credentials.json` como a credencial `webhook.<channel>`,
+cifrada com as demais. Os commands `webhooks` leem e gravam essas entradas;
+`credentials list` também as mostra pelo nome. Em CI, defina
+`{{BIN}}_MASTER_KEY` a partir de um secret e cadastre a URL por stdin:
+
+```bash
+printf %s "$DISCORD_WEBHOOK" | {{bin}} webhooks add deploys --stdin --no-verify
+```
+
+A variável `{{BIN}}_API_BASE` troca `https://discord.com` por outro endereço.
+Ela existe para os testes, que sobem um servidor local no lugar do Discord.
 
 ## credentials.json
 

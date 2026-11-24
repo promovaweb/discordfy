@@ -11,6 +11,12 @@
  * PageUp/PageDown; header clicks sort, row clicks select and a second click
  * activates. Buttons display their screen action key, and links copy on click.
  * Everything receives the theme so screens never hard-code colors.
+ *
+ * Colors follow the Specsfy design system: the selected row of lists and
+ * tables is a violet block (`selection` / `selectionText`), hover uses the
+ * quiet `surfaceHigh` shade, and buttons show their key as a petrol chip
+ * (`primary` / `primaryText`); a `primary` button paints the whole
+ * control as that petrol block.
  */
 import {
   ScrollBoxRenderable,
@@ -240,15 +246,20 @@ export function button(
     key: string;
     label: string;
     icon?: TitleIcon;
+    /** Paints the whole button as the petrol primary block. */
+    primary?: boolean;
     onPress: () => void;
   },
 ): BoxRenderable {
+  const primary = options.primary ?? false;
   const label = options.icon
     ? withIcon(options.icon.icons, options.icon.name, options.label)
     : options.label;
   const text = new TextRenderable(renderer, {
-    content: ` ${label}`,
-    fg: theme.text,
+    content: primary ? ` ${label} ` : ` ${label}`,
+    fg: primary ? theme.primaryText : theme.text,
+    bg: primary ? theme.primary : undefined,
+    attributes: primary ? TextAttributes.BOLD : TextAttributes.NONE,
     selectable: false,
   });
   const box = new BoxRenderable(renderer, {
@@ -258,8 +269,9 @@ export function button(
   });
   box.add(
     new TextRenderable(renderer, {
-      content: `[${options.key}]`,
-      fg: theme.accent,
+      content: ` ${options.key} `,
+      fg: theme.primaryText,
+      bg: theme.primary,
       attributes: TextAttributes.BOLD,
       selectable: false,
     }),
@@ -267,7 +279,8 @@ export function button(
   box.add(text);
 
   function updateHover(inside: boolean): void {
-    text.fg = inside ? theme.accent : theme.text;
+    if (primary) text.attributes = inside ? TextAttributes.BOLD | TextAttributes.UNDERLINE : TextAttributes.BOLD;
+    else text.fg = inside ? theme.accent : theme.text;
   }
 
   clickable(renderer, box, {
@@ -331,8 +344,9 @@ export function listPanel(
   function paint(): void {
     for (const [i, row] of rows.entries()) {
       row.content = `${i === index ? ">" : " "} ${options.items[i]}`;
-      row.fg = i === index ? theme.accent : i === hovered ? theme.textStrong : theme.text;
-      row.bg = i === index ? theme.surfaceHigh : theme.surface;
+      // Specsfy selection: violet block for the selected row, quiet shade on hover.
+      row.fg = i === index ? theme.selectionText : i === hovered ? theme.textStrong : theme.text;
+      row.bg = i === index ? theme.selection : i === hovered ? theme.surfaceHigh : theme.surface;
     }
   }
 
@@ -475,9 +489,10 @@ export function table(
   function paint(): void {
     for (const [i, node] of rowNodes.entries()) {
       (node.getChildren()[0] as TextRenderable).content = i === index ? "› " : "  ";
-      node.backgroundColor = theme.surface;
+      // Specsfy selection: the whole selected row becomes a violet block.
+      node.backgroundColor = i === index ? theme.selection : theme.surface;
       for (const child of node.getChildren()) {
-        (child as TextRenderable).fg = i === index ? theme.accent : theme.text;
+        (child as TextRenderable).fg = i === index ? theme.selectionText : theme.text;
         (child as TextRenderable).attributes = i === index ? TextAttributes.BOLD : TextAttributes.NONE;
       }
     }
@@ -513,7 +528,7 @@ export function table(
       }
 
       function updateHover(inside: boolean): void {
-        node.backgroundColor = inside || index === i ? theme.surfaceHigh : theme.surface;
+        node.backgroundColor = index === i ? theme.selection : inside ? theme.surfaceHigh : theme.surface;
       }
 
       clickable(renderer, node, {
@@ -645,7 +660,7 @@ export function stateView(
     }),
   );
   if (options.message) box.add(dim(renderer, theme, options.message));
-  if (options.action) box.add(button(renderer, theme, options.action));
+  if (options.action) box.add(button(renderer, theme, { ...options.action, primary: true }));
   return box;
 }
 

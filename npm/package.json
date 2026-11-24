@@ -1,0 +1,40 @@
+{
+  "name": "@promovaweb/discordfy",
+  "version": "0.1.0",
+  "description": "CLI, TUI and MCP stdio server to send rich messages to Discord channels through stored webhooks.",
+  "license": "AGPL-3.0-only",
+  "author": "Promovaweb",
+  "homepage": "https://promovaweb.com/discordfy/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/promovaweb/discordfy.git"
+  },
+  "keywords": [
+    "discord",
+    "webhook",
+    "embed",
+    "notifications",
+    "cli",
+    "mcp",
+    "tui",
+    "ai-agents"
+  ],
+  "bin": {
+    "discordfy": "bin/discordfy.cjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "postinstall": "node lib/binary.cjs"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

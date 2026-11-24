@@ -10,17 +10,17 @@ import type { Command } from "../registry.ts";
 
 export const tuiCommand: Command = {
   name: "tui",
-  description: "Open the terminal interface (Overview and About). Requires a TTY.",
+  description: "Open the terminal interface (Webhooks, Overview, Settings, Credentials, Docs and About). Requires a TTY.",
   options: [
     {
       name: "--tab",
-      argument: { name: "tab", values: ["overview", "about"] },
+      argument: { name: "tab", values: ["webhooks", "overview", "settings", "credentials", "docs", "about"] },
       description: "Initial tab. Overrides tui.initialTab from settings.json.",
     },
   ],
   exitCodes: [ExitCode.NO_TTY],
   interactive: true,
-  examples: [`${manifest.bin}`, `${manifest.bin} tui --tab about`],
+  examples: [`${manifest.bin}`, `${manifest.bin} tui --tab webhooks`],
   run: async (ctx) => {
     if (!process.stdin.isTTY || !process.stdout.isTTY) {
       throw error.noTty(`The TUI needs an interactive terminal. Use "${manifest.bin} --help" for the commands.`);

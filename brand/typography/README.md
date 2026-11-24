@@ -1,10 +1,10 @@
-# Tipografia do Termfy Starter Kit
+# Tipografia do Discordfy
 
 ## Famílias
 
 - **Manrope**: títulos, chamadas e wordmark editável; pesos 500 a 800.
 - **Inter**: interface, texto corrido e dados; pesos 400 a 700.
-- **JetBrains Mono**: comandos, nomes de commands e exemplos de terminal.
+- **JetBrains Mono**: comandos, URLs e exemplos de terminal.
 
 As versões latinas de Manrope e Inter estão em `../fonts/`. Ambas usam a
 SIL Open Font License, preservada nos arquivos `OFL-*.txt`.

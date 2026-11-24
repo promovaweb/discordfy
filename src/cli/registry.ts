@@ -46,10 +46,12 @@ export interface OptionDefinition {
   default?: string | boolean;
   /** Hidden from `--help`, still accepted by the parser. */
   hidden?: boolean;
+  /** May be given more than once; the values arrive as a string array in order. */
+  repeatable?: boolean;
 }
 
 /** Parsed option values, keyed by long name without hyphens. */
-export type Options = Record<string, string | boolean | undefined>;
+export type Options = Record<string, string | boolean | string[] | undefined>;
 
 /** Context handed to `run`. */
 export interface Context {

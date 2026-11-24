@@ -1,5 +1,5 @@
 /**
- * TUI theme.
+ * Discordfy TUI theme, built on the Specsfy design system.
  *
  * Three palettes, chosen by `tui.theme` in settings.json:
  *
@@ -9,8 +9,14 @@
  *   terminal paints them with its own theme (Ghostty, Alacritty, Kitty,
  *   Omarchy, Termius, Herdr and any other), so the TUI follows a theme switch
  *   live and keeps the terminal transparency, because the background is the
- *   terminal default background (SGR 49).
- * - `night` and `day`: fixed RGB palettes, the same on every terminal.
+ *   terminal default background (SGR 49). The Specsfy design system
+ *   survives as slot choices: cyan for the turquoise focus and magenta for
+ *   the violet selection.
+ * - `night` and `day`: the fixed palettes built from the Specsfy brand
+ *   tokens, the design system Discordfy shares with Specsfy. Turquoise
+ *   marks focus and the active tab, violet marks the selected row and petrol
+ *   marks surfaces and primary actions. They look the same on every
+ *   terminal.
  *
  * When the terminal answers the OSC 4/10/11 palette query, `terminalTheme`
  * receives the real colors and only chooses WHICH palette slot fills each
@@ -18,7 +24,8 @@
  * accents with contrast). The result is still made of palette references.
  *
  * Color names follow their role in the interface, not the hue, so switching
- * palettes never touches the screens. Colors exist only in this file.
+ * palettes never touches the screens. States are always named in text next
+ * to the color. Colors exist only in this file.
  */
 import { RGBA, type CliRenderer, type ColorInput, type TerminalColors } from "@opentui/core";
 import { readSettings, getPath } from "../config/settings.ts";
@@ -44,6 +51,15 @@ export interface Theme {
   ok: ColorInput;
   warn: ColorInput;
   error: ColorInput;
+  /** Background and text of the selected row (violet). */
+  selection: ColorInput;
+  selectionText: ColorInput;
+  /** Background and text of the active tab (turquoise focus). */
+  tabActive: ColorInput;
+  tabActiveText: ColorInput;
+  /** Background and text of primary actions and highlighted surfaces (petrol). */
+  primary: ColorInput;
+  primaryText: ColorInput;
   barBackground: ColorInput;
   barText: ColorInput;
   keyBackground: ColorInput;
@@ -70,47 +86,59 @@ export const ANSI = {
   brightWhite: 15,
 } as const;
 
-/** Fixed RGB palettes. */
+/** Fixed RGB palettes of the Specsfy design system. */
 export const themes: Record<"night" | "day", Theme> = {
   night: {
     name: "night",
-    background: "#1a1b26",
-    surface: "#1f2335",
-    surfaceHigh: "#24283b",
-    border: "#3b4261",
-    borderActive: "#7aa2f7",
-    text: "#c0caf5",
-    textDim: "#565f89",
-    textStrong: "#e0e6ff",
-    accent: "#7aa2f7",
-    accentSecondary: "#bb9af7",
-    ok: "#9ece6a",
-    warn: "#e0af68",
-    error: "#f7768e",
-    barBackground: "#16161e",
-    barText: "#a9b1d6",
-    keyBackground: "#3d59a1",
-    keyText: "#ffffff",
+    background: "#000A0E",
+    surface: "#001117",
+    surfaceHigh: "#03212A",
+    border: "#2D4C58",
+    borderActive: "#5EEDE1",
+    text: "#F2F8F9",
+    textDim: "#869EA8",
+    textStrong: "#FFFFFF",
+    accent: "#5EEDE1",
+    accentSecondary: "#C4B5FD",
+    ok: "#6EE7B7",
+    warn: "#FCD34D",
+    error: "#FCA5A5",
+    selection: "#6D28D9",
+    selectionText: "#F2F8F9",
+    tabActive: "#5EEDE1",
+    tabActiveText: "#001117",
+    primary: "#15626A",
+    primaryText: "#F2F8F9",
+    barBackground: "#001117",
+    barText: "#B2C6CE",
+    keyBackground: "#15626A",
+    keyText: "#F2F8F9",
   },
   day: {
     name: "day",
-    background: "#e1e2e7",
-    surface: "#d6d8df",
-    surfaceHigh: "#c4c8da",
-    border: "#a8aecb",
-    borderActive: "#2e7de9",
-    text: "#3760bf",
-    textDim: "#848cb5",
-    textStrong: "#1b2a5e",
-    accent: "#2e7de9",
-    accentSecondary: "#9854f1",
-    ok: "#587539",
-    warn: "#8c6c3e",
-    error: "#f52a65",
-    barBackground: "#c4c8da",
-    barText: "#3760bf",
-    keyBackground: "#2e7de9",
-    keyText: "#ffffff",
+    background: "#FFFFFF",
+    surface: "#F2F8F9",
+    surfaceHigh: "#E4EBEE",
+    border: "#C9D6DC",
+    borderActive: "#15626A",
+    text: "#001117",
+    textDim: "#2D4C58",
+    textStrong: "#000A0E",
+    accent: "#15626A",
+    accentSecondary: "#6D28D9",
+    ok: "#047857",
+    warn: "#92400E",
+    error: "#B91C1C",
+    selection: "#6D28D9",
+    selectionText: "#FFFFFF",
+    tabActive: "#15626A",
+    tabActiveText: "#FFFFFF",
+    primary: "#15626A",
+    primaryText: "#FFFFFF",
+    barBackground: "#E4EBEE",
+    barText: "#0C2E3A",
+    keyBackground: "#15626A",
+    keyText: "#FFFFFF",
   },
 };
 
@@ -124,14 +152,18 @@ export interface TerminalSlots {
   ok: number;
   warn: number;
   error: number;
-  /** Text over the accent block of the key bar. */
+  /** Text over the accent block of the key bar, the active tab and primary actions. */
   keyText: number | "fg";
+  /** Background of the selected row. */
+  selection: number;
+  /** Text over the selected row. */
+  selectionText: number | "fg";
 }
 
 /**
  * Slots of the `terminal` theme. They are the brand of the binary in this
- * theme: `termfy-brand` changes `accent` to another ANSI slot (cyan, for
- * example) instead of a fixed color, so the TUI keeps inheriting the
+ * theme: cyan carries the turquoise focus and magenta the violet
+ * selection, instead of fixed colors, so the TUI keeps inheriting the
  * terminal theme. Used as they are when the terminal does not report its
  * colors.
  */
@@ -139,12 +171,14 @@ export const DEFAULT_TERMINAL_SLOTS: Readonly<TerminalSlots> = Object.freeze({
   surfaceHigh: "bg",
   border: ANSI.brightBlack,
   textDim: ANSI.brightBlack,
-  accent: ANSI.blue,
+  accent: ANSI.cyan,
   accentSecondary: ANSI.magenta,
   ok: ANSI.green,
   warn: ANSI.yellow,
   error: ANSI.red,
   keyText: "fg",
+  selection: ANSI.magenta,
+  selectionText: "fg",
 });
 
 /** Parses `#rrggbb` (or `#rgb`) into 0-255 channels; `null` for anything else. */
@@ -220,22 +254,27 @@ export function chooseTerminalSlots(colors?: TerminalColors | null): TerminalSlo
   slots.warn = readable(DEFAULT_TERMINAL_SLOTS.warn);
   slots.error = readable(DEFAULT_TERMINAL_SLOTS.error);
 
-  // Key bar text: the candidate with the most contrast over the accent block.
-  // ANSI has no "default background" foreground, so the terminal background
-  // color itself is not a candidate.
-  const accent = slot(slots.accent);
-  if (accent) {
+  // Selected row: the violet slot (normal or bright) where text reads best.
+  slots.selection = readable(DEFAULT_TERMINAL_SLOTS.selection);
+
+  // Text over a colored block: the candidate with the most contrast. ANSI has
+  // no "default background" foreground, so the terminal background color
+  // itself is not a candidate.
+  const textOver = (block: [number, number, number] | null): number | "fg" => {
+    if (!block) return "fg";
     const candidates: Array<[number | "fg", [number, number, number] | null]> = [
       ["fg", fg],
       [ANSI.black, slot(ANSI.black)],
       [ANSI.brightWhite, slot(ANSI.brightWhite)],
     ];
-    let best: [number | "fg", number] = ["fg", contrast(fg, accent)];
+    let best: [number | "fg", number] = ["fg", contrast(fg, block)];
     for (const [name, color] of candidates) {
-      if (color && contrast(color, accent) > best[1]) best = [name, contrast(color, accent)];
+      if (color && contrast(color, block) > best[1]) best = [name, contrast(color, block)];
     }
-    slots.keyText = best[0];
-  }
+    return best[0];
+  };
+  slots.keyText = textOver(slot(slots.accent));
+  slots.selectionText = textOver(slot(slots.selection));
   return slots;
 }
 
@@ -263,6 +302,12 @@ export function terminalTheme(colors?: TerminalColors | null): Theme {
     ok: ref(slots.ok),
     warn: ref(slots.warn),
     error: ref(slots.error),
+    selection: ref(slots.selection),
+    selectionText: ref(slots.selectionText),
+    tabActive: ref(slots.accent),
+    tabActiveText: ref(slots.keyText),
+    primary: ref(slots.accent),
+    primaryText: ref(slots.keyText),
     barBackground: RGBA.defaultBackground(),
     barText: ref(slots.textDim),
     keyBackground: ref(slots.accent),

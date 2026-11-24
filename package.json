@@ -1,20 +1,21 @@
 {
-  "name": "termfy-starter-kit",
-  "version": "0.13.4",
-  "description": "CLI, TUI and MCP stdio server skeleton in Bun, with the Termfy framework skills installed.",
+  "name": "discordfy",
+  "version": "0.1.0",
+  "description": "CLI, TUI and MCP stdio server to send rich messages to Discord channels through stored webhooks.",
   "type": "module",
   "private": true,
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "bin": {
-    "termfy": "src/main.ts"
+    "discordfy": "src/main.ts"
   },
   "termfy": {
-    "bin": "termfy",
-    "title": "Termfy",
+    "bin": "discordfy",
+    "title": "Discordfy",
     "author": "Promovaweb",
-    "site": "https://promovaweb.com",
-    "repository": "https://github.com/promovaweb/termfy-starter-kit",
-    "framework": "https://github.com/promovaweb/termfy"
+    "site": "https://promovaweb.com/discordfy/",
+    "repository": "https://github.com/promovaweb/discordfy",
+    "framework": "https://github.com/promovaweb/termfy",
+    "starterKit": "0.13.4"
   },
   "scripts": {
     "dev": "bun run src/main.ts",
@@ -32,14 +33,17 @@
     "skills:check": "bun run scripts/check-skills.ts",
     "init": "bun run scripts/init.ts",
     "validate": "bun run typecheck && bun test && bun run skills:check && bun run opencli:check && bun run docs:check && bun run build",
-    "docs:check": "bun run scripts/check-docs.ts"
+    "docs:check": "bun run scripts/check-docs.ts",
+    "ebook": "bun .ebook/build-ebook.mjs",
+    "ebook:verify": "bun .ebook/build-ebook.mjs --check",
+    "npm:readme": "bun run scripts/npm-readme.ts"
   },
   "engines": {
     "bun": ">=1.4.4"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/promovaweb/termfy-starter-kit.git"
+    "url": "git+https://github.com/promovaweb/discordfy.git"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
@@ -49,5 +53,15 @@
   "devDependencies": {
     "@types/bun": "^1.4.4",
     "typescript": "^7.0.2"
-  }
+  },
+  "keywords": [
+    "discord",
+    "webhook",
+    "embed",
+    "notifications",
+    "cli",
+    "mcp",
+    "tui",
+    "ai-agents"
+  ]
 }

@@ -1,7 +1,7 @@
 /**
- * Design tokens do Termfy Starter Kit, no padrão do Brandfy.
+ * Design tokens gerados pelo Brandfy.
  *
- * Edite brand/colors/palette.json e gere este arquivo de novo. Alterações feitas somente
+ * Edite brand/colors/palette.json e execute novamente o gerador. Alterações feitas somente
  * neste arquivo serão substituídas na próxima compilação.
  */
 
@@ -9,7 +9,7 @@
 
 :root {
   --color-primary-50: #ECFDFB;
-  --color-primary-100: #CCFBF6;
+  --color-primary-100: #C6F4ED;
   --color-primary-200: #99F5ED;
   --color-primary-300: #5EEDE1;
   --color-primary-400: #37E1D0;
@@ -19,17 +19,17 @@
   --color-primary-800: #15626A;
   --color-primary-900: #021C26;
   --color-primary-950: #00161E;
-  --color-accent-50: #F7FEE7;
-  --color-accent-100: #ECFCCB;
-  --color-accent-200: #D9F99D;
-  --color-accent-300: #CCF681;
-  --color-accent-400: #BEF264;
-  --color-accent-500: #A3E635;
-  --color-accent-600: #4D7C0F;
-  --color-accent-700: #3F6212;
-  --color-accent-800: #365314;
-  --color-accent-900: #283F0D;
-  --color-accent-950: #1A2E05;
+  --color-accent-50: #F2F3FF;
+  --color-accent-100: #E4E7FF;
+  --color-accent-200: #CBD0FF;
+  --color-accent-300: #ADB5FF;
+  --color-accent-400: #838FF9;
+  --color-accent-500: #5865F2;
+  --color-accent-600: #4752C4;
+  --color-accent-700: #39439E;
+  --color-accent-800: #2D347B;
+  --color-accent-900: #21275D;
+  --color-accent-950: #15193D;
   --color-neutral-50: #F2F8F9;
   --color-neutral-100: #E4EBEE;
   --color-neutral-200: #C9D6DC;
@@ -46,7 +46,7 @@
   --color-text: #001117;
   --color-text-muted: #2D4C58;
   --color-border: #C9D6DC;
-  --color-accent: #4D7C0F;
+  --color-accent: #4752C4;
   --color-focus: #15626A;
   --color-success: #047857;
   --color-warning: #92400E;
@@ -61,7 +61,7 @@
   --color-text: #F2F8F9;
   --color-text-muted: #B2C6CE;
   --color-border: #2D4C58;
-  --color-accent: #A3E635;
+  --color-accent: #ADB5FF;
   --color-focus: #5EEDE1;
   --color-success: #6EE7B7;
   --color-warning: #FCD34D;
@@ -76,7 +76,7 @@
     --color-text: #F2F8F9;
     --color-text-muted: #B2C6CE;
     --color-border: #2D4C58;
-    --color-accent: #A3E635;
+    --color-accent: #ADB5FF;
     --color-focus: #5EEDE1;
     --color-success: #6EE7B7;
     --color-warning: #FCD34D;

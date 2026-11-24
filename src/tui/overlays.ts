@@ -20,6 +20,10 @@ import { controlSpacing } from "./spacing.ts";
  * Toasts stack at the bottom right, close after a few seconds or on click,
  * and never take keyboard input. With `motion`, modals and toasts slide in
  * over three short frames.
+ *
+ * Colors follow the Specsfy design system: the focused dialog action is a
+ * petrol `primary` block and the highlighted palette or choose entry is a
+ * violet `selection` block.
  */
 import {
   BoxRenderable,
@@ -235,20 +239,25 @@ export class Overlays {
     const row = new BoxRenderable(this.renderer, { flexDirection: "row", gap: controlSpacing.gap, height: 1, marginTop: controlSpacing.modalY });
     const texts = items.map((item, index) => {
       const box = new BoxRenderable(this.renderer, { flexDirection: "row", flexShrink: 0 });
-      const keyText = new TextRenderable(this.renderer, { content: `[${item.key}]`, fg: item.danger ? this.theme.error : this.theme.accent, attributes: TextAttributes.BOLD, selectable: false });
+      const keyText = new TextRenderable(this.renderer, { content: ` [${item.key}]`, fg: item.danger ? this.theme.error : this.theme.accent, attributes: TextAttributes.BOLD, selectable: false });
       const label = new TextRenderable(this.renderer, { content: ` ${item.label} `, fg: this.theme.text, selectable: false });
       box.add(keyText);
       box.add(label);
-      clickable(this.renderer, box, { onClick: item.run, onHover: (inside) => { label.fg = inside ? this.theme.accent : index === focused() ? this.theme.accent : this.theme.text; } });
+      clickable(this.renderer, box, { onClick: item.run, onHover: (inside) => { if (index !== focused()) label.fg = inside ? this.theme.accent : this.theme.text; } });
       row.add(box);
-      return label;
+      return { item, keyText, label };
     });
     parent.add(row);
+    // Specsfy confirmation: the focused action is a petrol primary block;
+    // the others keep the key in accent (or error, when destructive).
     const paint = () =>
-      texts.forEach((label, index) => {
+      texts.forEach(({ item, keyText, label }, index) => {
         const on = index === focused();
-        label.fg = on ? this.theme.accent : this.theme.text;
-        label.attributes = on ? TextAttributes.BOLD | TextAttributes.UNDERLINE : TextAttributes.NONE;
+        keyText.fg = on ? this.theme.primaryText : item.danger ? this.theme.error : this.theme.accent;
+        keyText.bg = on ? this.theme.primary : this.theme.surfaceHigh;
+        label.fg = on ? this.theme.primaryText : this.theme.text;
+        label.bg = on ? this.theme.primary : this.theme.surfaceHigh;
+        label.attributes = on ? TextAttributes.BOLD : TextAttributes.NONE;
       });
     paint();
     return paint;
@@ -406,8 +415,11 @@ export class Overlays {
         const on = offset + slot === index;
         text.content = item ? `${on ? "›" : " "} ${item.text}` : "";
         hint.content = item?.hint ? ` ${item.hint}` : "";
-        text.fg = on ? this.theme.accent : offset + slot === hovered ? this.theme.textStrong : this.theme.text;
-        row.backgroundColor = on && item ? this.theme.background : this.theme.surfaceHigh;
+        // Specsfy selection: the highlighted entry is a violet block.
+        const selected = on && Boolean(item);
+        text.fg = selected ? this.theme.selectionText : offset + slot === hovered ? this.theme.textStrong : this.theme.text;
+        hint.fg = selected ? this.theme.selectionText : this.theme.textDim;
+        row.backgroundColor = selected ? this.theme.selection : this.theme.surfaceHigh;
       });
     };
     const move = (delta: number) => {

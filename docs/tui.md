@@ -8,17 +8,18 @@ encerra com exit code 8.
 
 | Aba | Ícone | Conteúdo |
 | --- | --- | --- |
+| Webhooks | `link` | Aba inicial (`webhooks`). Tabela com o canal e o endereço de cada webhook salvo, com o token mascarado, e painel Vault com o total. `a` cadastra (nome do canal e URL num prompt secreto, conferida no Discord), `s` ou Enter envia uma mensagem de texto ao canal selecionado, `t` testa o webhook sem postar, `v` revela ou mascara as URLs, `d` remove depois de confirmar e `r` recarrega. Mudanças feitas pelo CLI em outro terminal atualizam a lista. |
 | Overview | `overview` | Environment (binary, runtime e platform), State (settings e cofre) e Next steps com comandos de terminal, configuração MCP e ações de copiar/recarregar. |
 | Settings | `settings` | Tabela com key, valor e padrão de cada setting, com painel de detalhe. |
 | Credentials | `vault` | Nomes das credenciais do cofre, origem da master key e total de credenciais. Valores não aparecem. |
 | Docs | `docs` | Índice dos tópicos da documentação embutida e o documento em Markdown. |
 | About | `about` | Binary, project, license, credits, standards seguidos e links. |
 
-Cada aba mostra o número e o ícone do papel: ` 1 ⌂ Overview ` e
-` 2 ⚙ Settings `. No layout compacto, a aba inativa mostra só o número e o
-ícone. O clique abre a aba. A roda do mouse sobre a barra de abas troca de
+Cada aba mostra o número e o ícone do papel: ` 1 ↗ Webhooks ` e
+` 2 ⌂ Overview `. No layout compacto, ou quando as seis abas não cabem na
+largura, a aba inativa mostra só o número e o ícone. O clique abre a aba. A roda do mouse sobre a barra de abas troca de
 aba. A aba inicial vem de `tui.initialTab` em settings.json ou de `--tab`,
-com os valores `overview`, `settings`, `credentials`, `docs` e `about`.
+com os valores `webhooks`, `overview`, `settings`, `credentials`, `docs` e `about`.
 
 ## Teclas
 
@@ -88,7 +89,8 @@ const index = await ctx.choose({ title: "Theme", items: ["terminal", "night", "d
 
 `confirm` resolve `true` ao aceitar e `false` ao cancelar. `prompt` resolve
 o texto ou `undefined` no `Esc`. `choose` resolve o índice ou `undefined`.
-`danger` pinta o botão com a cor de erro. `secret` mostra bolinhas e o valor
+A ação em foco aparece como bloco `primary`; `danger` pinta a tecla de
+confirmação com a cor de erro e começa com o foco em cancelar. `secret` mostra bolinhas e o valor
 não chega ao frame. `validate` devolve uma mensagem para manter o diálogo
 aberto. Um clique fora do diálogo cancela.
 
@@ -121,14 +123,16 @@ Abaixo de 60×16 o shell troca a tela pela mensagem "Terminal too small" até
 o terminal crescer. Não repita essa mensagem na screen.
 
 O shell, as abas e a barra alinham o conteúdo na mesma margem. A aba ativa
-recebe um indicador `━` sob o rótulo. Em `medium` e `wide`, as margens
+é um bloco cheio em `tabActive`, com o rótulo em `tabActiveText`; cada aba
+tem uma coluna de respiro de cada lado, então o bloco não empurra as
+vizinhas quando o foco muda. Em `medium` e `wide`, as margens
 laterais têm três colunas. Os cartões têm padding de duas colunas e uma
 linha. Os gaps têm quatro colunas e uma linha. Uma linha vazia separa
 cabeçalho, abas, conteúdo e barra. Em `compact`, as margens e o padding
 lateral têm uma coluna, sem padding vertical nem linhas de separação.
 As screens acessam os tokens por `ctx.space`; componentes usam
-`spacingFor(renderer.width)`. Botões usam `[c] copy MCP config`, com a
-tecla em accent e dois espaços entre controles. Os cartões limitam a altura
+`spacingFor(renderer.width)`. Botões usam ` c  copy MCP config`, com a
+tecla num chip em `primary` e dois espaços entre controles. Os cartões limitam a altura
 ao conteúdo ou à área de leitura disponível; conteúdo excedente rola.
 Diálogos e toasts têm padding de duas colunas e uma linha.
 
@@ -169,6 +173,20 @@ A escolha vem de `tui.theme`. As cores têm nomes de papel (`accent`,
 `textDim`, `border`), não de matiz, para que uma troca de paleta não exija
 alterar as screens.
 
+O Discordfy usa o design system do Specsfy. Além dos tokens comuns, o tema
+tem três pares de bloco, cada um com fundo e texto:
+
+| Par | Papel | Onde aparece |
+| --- | --- | --- |
+| `selection` / `selectionText` | violeta da seleção | linha selecionada de `table` e `listPanel`, item destacado da paleta de comandos e do `choose` |
+| `tabActive` / `tabActiveText` | turquesa do foco | aba ativa, desenhada como bloco cheio |
+| `primary` / `primaryText` | petróleo das ações principais | ação em foco nos diálogos de confirmação e prompt, chip de tecla dos botões, botão `primary` (como a ação do `stateView`) |
+
+A barra de teclas mostra cada tecla como chip em `keyBackground` com texto
+em `keyText`; a descrição fica apagada ao lado, sobre a barra sem fundo.
+O hover das linhas usa a sombra discreta `surfaceHigh`, e o estado sempre
+aparece também em texto, nunca só na cor.
+
 ### terminal
 
 O tema `terminal` herda as cores do tema do terminal (Ghostty, Alacritty,
@@ -176,15 +194,19 @@ Kitty, Omarchy, Termius, Herdr e outros). Cada cor da TUI é uma referência à
 paleta do terminal (as 16 cores ANSI) ou ao texto e fundo padrão, sem
 RGB fixo. O terminal pinta com o tema dele, então trocar o tema do terminal
 muda a TUI na hora. O fundo é o fundo padrão do terminal, então a
-transparência e o blur do terminal continuam.
+transparência e o blur do terminal continuam. O design system do Specsfy
+sobrevive na escolha dos slots: ciano para o foco turquesa e magenta para a
+seleção violeta.
 
 Ao abrir, a TUI pergunta a paleta ao terminal (OSC 4, 10 e 11) com espera
 curta de 300 ms. Com resposta, ela escolhe qual cor da paleta ocupa cada
 papel: texto apagado legível sobre o fundo (alguns temas, como o Solarized
-Dark, pintam o preto brilhante igual ao fundo), sombra da seleção, acento
-com contraste (troca entre a cor normal e a brilhante) e o texto da barra de
-teclas. Sem resposta, usa o mapeamento padrão. A escolha do slot vale até a
-próxima abertura. As cores em si acompanham o terminal com a TUI aberta.
+Dark, pintam o preto brilhante igual ao fundo), sombra do hover, acento e
+seleção com contraste (troca entre a cor normal e a brilhante) e o texto
+sobre cada bloco colorido (o candidato de maior contraste entre o texto
+padrão, ANSI 0 e ANSI 15). Sem resposta, usa o mapeamento padrão. A escolha
+do slot vale até a próxima abertura. As cores em si acompanham o terminal
+com a TUI aberta.
 
 Mapeamento padrão:
 
@@ -194,19 +216,42 @@ Mapeamento padrão:
 | `text`, `textStrong` | texto padrão do terminal |
 | `textDim`, `border`, `barText` | ANSI 8 (preto brilhante) |
 | `barBackground` | fundo padrão do terminal |
-| `accent`, `borderActive`, `keyBackground` | ANSI 4 (azul) |
-| `accentSecondary` | ANSI 5 (magenta) |
+| `accent`, `borderActive`, `tabActive`, `primary`, `keyBackground` | ANSI 6 (ciano, foco turquesa) |
+| `accentSecondary`, `selection` | ANSI 5 (magenta, seleção violeta) |
 | `ok` | ANSI 2 (verde) |
 | `warn` | ANSI 3 (amarelo) |
 | `error` | ANSI 1 (vermelho) |
-| `keyText` | texto padrão do terminal |
+| `keyText`, `tabActiveText`, `primaryText`, `selectionText` | texto padrão do terminal |
 
-`night` (Tokyo Night) e `day` (Tokyo Night Day) são paletas fixas em RGB,
-iguais em qualquer terminal.
+### night e day
 
-O acento do binário, nesse tema, é um slot ANSI em
-`DEFAULT_TERMINAL_SLOTS` (`accent: ANSI.cyan`, por exemplo). Um hex ali
-deixaria a TUI fora do tema do terminal.
+`night` e `day` são paletas fixas em RGB, iguais em qualquer terminal,
+montadas com os tokens da marca Specsfy: turquesa marca foco e aba ativa,
+violeta marca a linha selecionada e petróleo marca superfícies e ações
+principais.
+
+| Token | `night` | `day` |
+| --- | --- | --- |
+| `background` | `#000A0E` | `#FFFFFF` |
+| `surface` | `#001117` | `#F2F8F9` |
+| `surfaceHigh` | `#03212A` | `#E4EBEE` |
+| `border` | `#2D4C58` | `#C9D6DC` |
+| `borderActive`, `accent` | `#5EEDE1` | `#15626A` |
+| `accentSecondary` | `#C4B5FD` | `#6D28D9` |
+| `text` | `#F2F8F9` | `#001117` |
+| `textDim` | `#869EA8` | `#2D4C58` |
+| `selection` / `selectionText` | `#6D28D9` / `#F2F8F9` | `#6D28D9` / `#FFFFFF` |
+| `tabActive` / `tabActiveText` | `#5EEDE1` / `#001117` | `#15626A` / `#FFFFFF` |
+| `primary` / `primaryText` | `#15626A` / `#F2F8F9` | `#15626A` / `#FFFFFF` |
+| `keyBackground` / `keyText` | `#15626A` / `#F2F8F9` | `#15626A` / `#FFFFFF` |
+| `ok`, `warn`, `error` | `#6EE7B7`, `#FCD34D`, `#FCA5A5` | `#047857`, `#92400E`, `#B91C1C` |
+
+O texto sobre cada bloco tem contraste mínimo de 4,5:1 nas duas paletas, e
+`tests/tui-theme.test.ts` confere esse limite.
+
+O acento do binário, no tema `terminal`, é um slot ANSI em
+`DEFAULT_TERMINAL_SLOTS` (`accent: ANSI.cyan`, `selection: ANSI.magenta`).
+Um hex ali deixaria a TUI fora do tema do terminal.
 
 Um token novo precisa existir nas três paletas. No `terminal`, ele aponta
 para um slot ANSI ou para o texto ou fundo padrão do terminal. Os testes
@@ -218,9 +263,11 @@ Princípios do visual, no estilo modern unix:
 
 - cartões com bordas arredondadas e título em caixa alta acima da borda;
 - rótulos apagados à esquerda e valores em cor plena à direita;
-- uma cor de accent para o que está ativo, uma secundária para links e
-  origens externas; verde, âmbar e vermelho só para estado;
-- barra de status sem fundo cheio, com teclas em accent bold e descrição apagada;
+- turquesa para o foco e a aba ativa, violeta para a seleção, petróleo para
+  as ações principais e as teclas; uma cor secundária para links e origens
+  externas; verde, âmbar e vermelho só para estado;
+- barra de status sem fundo cheio, com cada tecla num chip petróleo e a
+  descrição apagada;
 - margens, padding e gaps definidos em `src/tui/spacing.ts`, conforme a faixa;
 - nada pisca, nada rola sozinho.
 
@@ -234,13 +281,13 @@ tema e, quando desenham ícone, um `TitleIcon` com `{ icons, name }`.
 | `panel` | Cartão com título acima da borda arredondada, `active` para o painel em foco. |
 | `scrollPanel` | Cartão com título acima da borda e rolagem por teclado e roda; barra discreta aparece apenas quando o conteúdo excede a altura. |
 | `keyValueTable` | Rótulo apagado e valor alinhados, com cor opcional por linha. |
-| `table` | Tabela com cabeçalho em caixa alta que ordena no clique, duas colunas entre células, seleção com `›`, linha clicável e teclado. |
-| `listPanel` | Lista com rolagem, seleção e clique na linha. |
-| `stateView` | Bloco central de `loading`, `empty` ou `error`, com botão. |
+| `table` | Tabela com cabeçalho em caixa alta que ordena no clique, duas colunas entre células, linha selecionada com `›` em bloco `selection`, linha clicável e teclado. |
+| `listPanel` | Lista com rolagem, seleção em bloco `selection` e clique na linha. |
+| `stateView` | Bloco central de `loading`, `empty` ou `error`, com botão `primary`. |
 | `spinner` | Indicador animado com `start`, `stop` e `setLabel`. |
 | `progressBar` | Barra de 0 a 1 com `set(value, label?)`. |
 | `link` | Hyperlink OSC 8; o clique copia a URL por OSC 52. |
-| `button` | `[tecla] rótulo` clicável, ligado à mesma função da ação. |
+| `button` | Chip da tecla em `primary` e rótulo clicável, ligado à mesma função da ação; `primary: true` pinta o botão inteiro como bloco petróleo. |
 | `heading`, `dim`, `list`, `spacer` | Texto e espaçamento. `spacer` não recebe tema. |
 
 `table(renderer, theme, { columns, rows, empty?, onSelect?, onActivate? })`
