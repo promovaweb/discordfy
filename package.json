@@ -1,0 +1,53 @@
+{
+  "name": "termfy-starter-kit",
+  "version": "0.13.4",
+  "description": "CLI, TUI and MCP stdio server skeleton in Bun, with the Termfy framework skills installed.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "bin": {
+    "termfy": "src/main.ts"
+  },
+  "termfy": {
+    "bin": "termfy",
+    "title": "Termfy",
+    "author": "Promovaweb",
+    "site": "https://promovaweb.com",
+    "repository": "https://github.com/promovaweb/termfy-starter-kit",
+    "framework": "https://github.com/promovaweb/termfy"
+  },
+  "scripts": {
+    "dev": "bun run src/main.ts",
+    "start": "bun run src/main.ts",
+    "tui": "bun run src/main.ts",
+    "mcp": "bun run src/main.ts mcp",
+    "build": "bun run scripts/build.ts",
+    "build:all": "bun run scripts/build.ts --all",
+    "test": "bun test",
+    "typecheck": "bunx tsc --noEmit",
+    "opencli": "bun run src/main.ts --opencli > docs/opencli.json",
+    "opencli:check": "bun run scripts/check-opencli.ts",
+    "skills:install": "npx -y skills add https://github.com/promovaweb/termfy -y -a universal -a claude-code -a codex -a opencode -a cursor -a gemini-cli",
+    "skills:update": "npx -y skills update -y -p",
+    "skills:check": "bun run scripts/check-skills.ts",
+    "init": "bun run scripts/init.ts",
+    "validate": "bun run typecheck && bun test && bun run skills:check && bun run opencli:check && bun run docs:check && bun run build",
+    "docs:check": "bun run scripts/check-docs.ts"
+  },
+  "engines": {
+    "bun": ">=1.4.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/promovaweb/termfy-starter-kit.git"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@opentui/core": "^0.8.4",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "typescript": "^7.0.2"
+  }
+}
