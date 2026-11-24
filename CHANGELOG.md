@@ -2,6 +2,20 @@
 
 Formato baseado em Keep a Changelog. Versões seguem SemVer.
 
+## [0.1.2] - 2026-11-24
+
+### Alterado
+
+- Identidade visual nova: contorno do logo do Discord sobre placa Blurple com
+  um sino de notificação amarelo no centro, em todos os ícones, assinaturas,
+  tokens e no ebook.
+- README com o selo "Feito para Discord".
+
+### Adicionado
+
+- Guias rápidos no Guia do Usuário: "Como obter o webhook do Discord" e
+  "Configurar o MCP no seu agente", também no ebook.
+
 ## [0.1.1] - 2026-11-24
 
 ### Alterado
@@ -12,11 +26,6 @@ Formato baseado em Keep a Changelog. Versões seguem SemVer.
   ricas no Discord, no canal certo".
 - Os links do site apontam para o portal `https://promovaweb.com/discordfy/`
   e a documentação aponta para o Guia do Usuário no repositório.
-
-### Corrigido
-
-- `send --payload -` lê o stdin: o parser aceita o `-` isolado como valor
-  de option.
 
 ## [0.1.0] - 2026-11-24
 
@@ -43,7 +52,8 @@ Primeira versão do Discordfy, criada a partir do Termfy Starter Kit 0.13.4.
 - Skill `discordfy` com referências de mensagens e automações.
 - Keys `send.username` e `send.avatarUrl`; `tui.initialTab` passa a abrir em
   `webhooks`.
-- Options repetíveis no parser (`--field`, `--inline-field`, `--embed`).
+- Options repetíveis no parser (`--field`, `--inline-field`, `--embed`) e
+  `-` isolado aceito como valor (`--payload -` lê o stdin).
 - Identidade visual própria em `brand/`, wrapper npm `@promovaweb/discordfy`
   e Guia do Usuário em PDF e EPUB.
 - Licença GNU AGPL 3.0.

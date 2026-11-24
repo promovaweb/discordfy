@@ -4,13 +4,15 @@ O Discordfy envia mensagens com embeds para canais do Discord por webhook, pela 
 
 ## Conceito visual
 
-O balão menta envolve o sinal de canal de texto (`#`), inclinado e desenhado em Blurple. Ele remete ao prefixo de canais como `#geral`, o destino das mensagens enviadas pelo Discordfy. A placa petróleo identifica a família Promovaweb.
+O contorno branco do Discord envolve um sino amarelo no lugar do rosto. A placa Blurple identifica o serviço de destino, e o sino representa a notificação que chega ao canal. As assinaturas trazem o nome Discordfy em curvas de Manrope 750.
+
+O glifo do Discord é marca da Discord Inc. O SVG usa o path do [Simple Icons 16.38.1](https://cdn.jsdelivr.net/npm/simple-icons@16.38.1/icons/discord.svg), com escala uniforme, traço sem preenchimento e máscara sobre os olhos.
 
 ## Arquivos oficiais
 
 | Arquivo | Uso |
 | --- | --- |
-| `logo/icon.svg` | ícone principal com placa petróleo |
+| `logo/icon.svg` | ícone principal com placa Blurple |
 | `logo/icon-light.svg` | ícone transparente sobre fundo claro |
 | `logo/icon-dark.svg` | ícone transparente sobre fundo escuro |
 | `logo/logo-light.svg` | assinatura horizontal sobre fundo claro |
@@ -47,8 +49,8 @@ node <brandfy>/skills/brandfy-design-tokens/scripts/generate-tokens.mjs \
 ## Regras para agentes
 
 1. Use os ativos desta pasta sem redesenhá-los.
-2. Use Blurple para o sinal de canal.
+2. Use contorno branco e sino amarelo (#FEE75C) na placa Blurple.
 3. Estado nunca depende apenas de cor: inclua texto, ícone ou posição.
 4. Use tokens semânticos e a variante correta para light ou dark mode.
-5. Use Blurple `#5865F2` sobre fundo escuro e `#4752C4` sobre fundo claro. Para texto em fundo escuro, use `#ADB5FF`.
+5. Sobre fundo claro, use o glifo em Blurple e a borda do sino em petróleo (#00161E). Sobre fundo escuro, use o glifo em branco. O sino mantém o amarelo nas duas variantes.
 6. Não aplique filtros, gradientes, sombras, rotações ou deformações.

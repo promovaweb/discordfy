@@ -16,6 +16,10 @@
 <p align="center">Um projeto da <a href="https://promovaweb.com">Promovaweb</a></p>
 
 <p align="center">
+  <img alt="Feito para Discord" src="https://img.shields.io/badge/Feito%20para-Discord-5865F2?logo=discord&logoColor=white">
+</p>
+
+<p align="center">
   <a href="https://github.com/promovaweb/discordfy/releases/latest"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/promovaweb/discordfy"></a>
   <a href="https://www.npmjs.com/package/@promovaweb/discordfy"><img alt="npm" src="https://img.shields.io/npm/v/@promovaweb/discordfy"></a>
   <a href="https://github.com/promovaweb/discordfy/blob/main/LICENSE"><img alt="Licença" src="https://img.shields.io/github/license/promovaweb/discordfy"></a>

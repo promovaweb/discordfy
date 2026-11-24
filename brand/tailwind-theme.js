@@ -34,6 +34,9 @@ export const colors = {
     "900": "var(--color-neutral-900)",
     "950": "var(--color-neutral-950)"
   },
+  "notification": {
+    "500": "var(--color-notification-500)"
+  },
   "background": "var(--color-background)",
   "surface": "var(--color-surface)",
   "text": "var(--color-text)",

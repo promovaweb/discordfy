@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "version": "0.1.1",
-  "edition": "v0.1.1",
-  "generated_at": "2026-11-24T10:06:57Z",
-  "source_sha256": "0c1b7624924bfa9445d55ddb9b092c0c53184f2b0e43e996363034de57969d03",
+  "version": "0.1.2",
+  "edition": "v0.1.2",
+  "generated_at": "2026-11-24T10:14:46Z",
+  "source_sha256": "6fae01c9e9cb065f8d9cddb052851d1a98f908e742c4e4839ce9df6b84060c63",
   "sources": [
     ".ebook/build-ebook.mjs",
     ".ebook/epub.css",
@@ -25,6 +25,8 @@
     "docs/user/06-seu-agente-no-discord.md",
     "docs/user/07-automacoes.md",
     "docs/user/08-seguranca-e-referencia.md",
+    "docs/user/09-guia-obter-o-webhook.md",
+    "docs/user/10-guia-configurar-o-mcp.md",
     "docs/user/README.md",
     "docs/user/reading-order.txt",
     "ebook/VERSION"
@@ -32,12 +34,12 @@
   "document_metadata": {},
   "artifacts": {
     "pdf": {
-      "file": "Discordfy-Guia-do-Usuario-v0.1.1.pdf",
-      "sha256": "5bf22d416e54232638dc708dd7c132712a516724db8b3935282c84d63c9db9f3"
+      "file": "Discordfy-Guia-do-Usuario-v0.1.2.pdf",
+      "sha256": "d3a6e117cb68cc0975bcc9b90558e84ab107f08b7278a3455f68553d2454e1b1"
     },
     "epub": {
-      "file": "Discordfy-Guia-do-Usuario-v0.1.1.epub",
-      "sha256": "75f1917f6b8cbdd4f58eef504dd7ab30ff5b8a04c467962049778d861dc4db0a"
+      "file": "Discordfy-Guia-do-Usuario-v0.1.2.epub",
+      "sha256": "48009dcd93e04d2137ae26dc7e86497e863796519a25e91297670c4c24297b1c"
     }
   }
 }

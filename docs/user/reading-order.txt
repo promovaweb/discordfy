@@ -9,3 +9,5 @@ docs/user/05-payload-completo.md
 docs/user/06-seu-agente-no-discord.md
 docs/user/07-automacoes.md
 docs/user/08-seguranca-e-referencia.md
+docs/user/09-guia-obter-o-webhook.md
+docs/user/10-guia-configurar-o-mcp.md

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-24T09:59:26.524Z",
+  "generatedAt": "2026-11-24T10:13:31.341Z",
   "assets": [
     {
       "path": "logo/icon-16w.png",
@@ -8,7 +8,7 @@
       "width": 16,
       "height": 16,
       "role": "icon-favicon-16",
-      "sha256": "ddbc14ab8387ff8cf5bafdd015badeabe8d325019362706c19d47507dbde5913"
+      "sha256": "8462d25699909fa3bf922db7a4a01d7c391944ed2570538e5ade815c2f4aece5"
     },
     {
       "path": "logo/icon-180w.png",
@@ -16,7 +16,7 @@
       "width": 180,
       "height": 180,
       "role": "icon-favicon-180",
-      "sha256": "a60b73a2154e525409827af630357c93ead48e3f5051836b7acf4b4221ea4d26"
+      "sha256": "16b49cce69217279c57a6a89841e3c8a43ed0087deecfba7ac3c64c566aa5aa5"
     },
     {
       "path": "logo/icon-192w.png",
@@ -24,7 +24,7 @@
       "width": 192,
       "height": 192,
       "role": "icon-favicon-192",
-      "sha256": "09865a827ef616dd83af075aaffaca0fe3d95c252eb7a361c64fe7af5d765a9e"
+      "sha256": "dca6fc0cf7b771f5e3c07f5c3a0b80a34db2787200465b78f1adcf1166713595"
     },
     {
       "path": "logo/icon-32w.png",
@@ -32,7 +32,7 @@
       "width": 32,
       "height": 32,
       "role": "icon-favicon-32",
-      "sha256": "dc98d1a928e94ad756c186f77a6075537335fe5b4486fc2259f817b0e78e300c"
+      "sha256": "5a2400c799e1f9debfa33c19c16ca5b05803996adeb60a9c7cfed04efc380872"
     },
     {
       "path": "logo/icon-48w.png",
@@ -40,7 +40,7 @@
       "width": 48,
       "height": 48,
       "role": "icon-favicon-48",
-      "sha256": "bf896fb3cb6e8fcca7629b8925cff793f51d2cfda021c738118718cd52003515"
+      "sha256": "7b4ec98055f43a33a8efd03a9013cedc34e3e57474a72e52f85bdccaffb7f9e3"
     },
     {
       "path": "logo/icon-512w.png",
@@ -48,7 +48,7 @@
       "width": 512,
       "height": 512,
       "role": "icon-favicon-512",
-      "sha256": "4bd223c17f53e5c44174b0d27a6b0bd5b7665b6c07f861e1ba33ff3d9ac38f6f"
+      "sha256": "8970c7f9baafcf471126f02dc2c844f9d52601f7f9272baf92778d1ffe9d6015"
     },
     {
       "path": "logo/icon-dark.png",
@@ -56,7 +56,7 @@
       "width": 512,
       "height": 512,
       "role": "icon-dark",
-      "sha256": "5b306dafa58f8d1f089d7e7da9d465271d5dbb461bf25cd251c2e3a0eb8f0aab"
+      "sha256": "3dbf2ccf783b31de9b2c1c1521b8a5a281f78e0ee2577b6bd4f985a09b9548f0"
     },
     {
       "path": "logo/icon-dark.svg",
@@ -64,7 +64,7 @@
       "width": 512,
       "height": 512,
       "role": "icon-dark",
-      "sha256": "8b7e8cae2ab267e979a87677aa69ee771aab9020d8eb61bf39a88414b104c0be"
+      "sha256": "090e24a31a9467781401b6d36b4d1f6e86cc0c57e1bede040cde019de1e20d6f"
     },
     {
       "path": "logo/icon-light.png",
@@ -72,7 +72,7 @@
       "width": 512,
       "height": 512,
       "role": "icon-light",
-      "sha256": "090dc7cfd0b6da5b5faaf62d2b17ae558373a48727e4972f7590574f22a13a41"
+      "sha256": "4ae9dab0f560f7669783d4734ad5454125c8369236656de37896e28b4498c555"
     },
     {
       "path": "logo/icon-light.svg",
@@ -80,7 +80,7 @@
       "width": 512,
       "height": 512,
       "role": "icon-light",
-      "sha256": "3baf7516371b57fb60850e565079de67c1b14d4d754a794a4a2c5947a312abaf"
+      "sha256": "97b4866486bd4b4b677b594d872dd1a6c0f49ed09c33a779ae609bc889979ad3"
     },
     {
       "path": "logo/icon.png",
@@ -88,7 +88,7 @@
       "width": 512,
       "height": 512,
       "role": "icon",
-      "sha256": "4bd223c17f53e5c44174b0d27a6b0bd5b7665b6c07f861e1ba33ff3d9ac38f6f"
+      "sha256": "8970c7f9baafcf471126f02dc2c844f9d52601f7f9272baf92778d1ffe9d6015"
     },
     {
       "path": "logo/icon.svg",
@@ -96,7 +96,7 @@
       "width": 512,
       "height": 512,
       "role": "icon",
-      "sha256": "9657b6611a801e34bc474323131bb11cae090f05b583b727d688b45e7688e629"
+      "sha256": "5ce7b5b17e8b3f9b4bb4ec71402605d1a1b227fd24cd2880571e94c5f3042415"
     },
     {
       "path": "logo/logo-dark.png",
@@ -104,7 +104,7 @@
       "width": 1300,
       "height": 339,
       "role": "logo-dark",
-      "sha256": "13760fb0dc711ca91c575a36e55118852e8d1c3a5b896dc5786fcdeb9aeda2ac"
+      "sha256": "9bad5d8c2680312d5e272e244b63fabe155f6bd4e8edfce800302c70e4b07364"
     },
     {
       "path": "logo/logo-dark.svg",
@@ -112,7 +112,7 @@
       "width": 1227,
       "height": 320,
       "role": "logo-dark",
-      "sha256": "c871c4deeb51fa07b76a856021f3a3a881621f477d5790c486ace92a0d978142"
+      "sha256": "41e8ec3a5969837cece45c1164d6c5cddd7112615bc85b238aed61fddb68a2c6"
     },
     {
       "path": "logo/logo-light.png",
@@ -120,7 +120,7 @@
       "width": 1300,
       "height": 339,
       "role": "logo-light",
-      "sha256": "c75a36c6700b1e98f6f840fff3dd82d683a050267b8efc260675c7c56c55c3a4"
+      "sha256": "115996d18112407d75d7e54dec4099a4804fdb305a2e30c96d9100f3732dfe70"
     },
     {
       "path": "logo/logo-light.svg",
@@ -128,7 +128,7 @@
       "width": 1227,
       "height": 320,
       "role": "logo-light",
-      "sha256": "2f076bdc2eb00ec0f3c71c6f54019908f20d21ef135d256272144e6b7d90392c"
+      "sha256": "310d53e442d54521bcb5d7030f547b94b37620e89c84f9319ab9888a327d9c6f"
     }
   ]
 }

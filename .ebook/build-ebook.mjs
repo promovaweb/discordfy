@@ -302,7 +302,7 @@ async function preparePages(paths) {
 async function build(version, sources, pages) {
   for (const binary of REQUIRED_BINARIES) if (!(await commandExists(binary))) fail(`'${binary}' não encontrado no PATH.`);
   const histogram = run("magick", [LOGO_PNG, "-depth", "8", "-format", "%c", "histogram:info:"]);
-  for (const color of ["#00161EFF", "#C6F4EDFF", "#5865F2FF"]) if (!histogram.includes(color)) fail(`brand/logo/icon.png precisa conter a cor oficial ${color}.`);
+  for (const color of ["#5865F2FF"]) if (!histogram.includes(color)) fail(`brand/logo/icon.png precisa conter a cor oficial ${color}.`);
   await mkdir(BUILD_ROOT, { recursive: true });
   const metadata = await documentMetadata(pages.paths);
   const preparedPages = await preparePages(pages.paths);
