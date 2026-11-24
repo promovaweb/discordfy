@@ -2,6 +2,14 @@
 
 Formato baseado em Keep a Changelog. Versões seguem SemVer.
 
+## [0.1.3] - 2026-11-24
+
+### Alterado
+
+- Ícone com composição mais rica: sino amarelo maior, ondas de vibração e
+  selo vermelho de notificação dentro do contorno do logo do Discord, em
+  todas as variantes, assinaturas e no ebook.
+
 ## [0.1.2] - 2026-11-24
 
 ### Alterado

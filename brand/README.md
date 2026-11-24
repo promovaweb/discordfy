@@ -4,7 +4,7 @@ O Discordfy envia mensagens com embeds para canais do Discord por webhook, pela 
 
 ## Conceito visual
 
-O contorno branco do Discord envolve um sino amarelo no lugar do rosto. A placa Blurple identifica o serviço de destino, e o sino representa a notificação que chega ao canal. As assinaturas trazem o nome Discordfy em curvas de Manrope 750.
+O contorno branco do Discord envolve um sino amarelo no lugar do rosto. Dois arcos sugerem a vibração do sino. Um badge vermelho com ponto branco marca a notificação. A placa Blurple identifica o serviço de destino, e o sino representa a notificação que chega ao canal. As assinaturas trazem o nome Discordfy em curvas de Manrope 750.
 
 O glifo do Discord é marca da Discord Inc. O SVG usa o path do [Simple Icons 16.38.1](https://cdn.jsdelivr.net/npm/simple-icons@16.38.1/icons/discord.svg), com escala uniforme, traço sem preenchimento e máscara sobre os olhos.
 
