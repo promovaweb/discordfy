@@ -1,6 +1,6 @@
 {
   "name": "@promovaweb/discordfy",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Rich Discord notifications: CLI, TUI and MCP stdio server that sends embeds to channels through webhooks saved by name.",
   "license": "AGPL-3.0-only",
   "author": "Promovaweb",

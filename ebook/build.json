@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "version": "0.1.4",
-  "edition": "v0.1.4",
-  "generated_at": "2026-11-24T10:39:54Z",
-  "source_sha256": "2ed31b62dd8fc11b3748d9b4e34f00ec7031c470a0e5f8036499522440ab8153",
+  "version": "0.1.5",
+  "edition": "v0.1.5",
+  "generated_at": "2026-11-25T05:53:46Z",
+  "source_sha256": "8ace9250f9b1d0bd9200065be15552d7e57934fc7e988eb36cc89ad93b200405",
   "sources": [
     ".ebook/build-ebook.mjs",
     ".ebook/epub.css",
@@ -34,12 +34,12 @@
   "document_metadata": {},
   "artifacts": {
     "pdf": {
-      "file": "Discordfy-Guia-do-Usuario-v0.1.4.pdf",
-      "sha256": "f33c8a8e1d30ddda10e680954e9ac352d37d9a8c5d9919a1ee4158c4d936c646"
+      "file": "Discordfy-Guia-do-Usuario-v0.1.5.pdf",
+      "sha256": "e15b9d1e92d9eb52e1f900932267bc90509b50787600aa6f7623184ba785627c"
     },
     "epub": {
-      "file": "Discordfy-Guia-do-Usuario-v0.1.4.epub",
-      "sha256": "29115df5b7dd4e043f7bcda915d018ba706b56838a9951905f61ebb483120f22"
+      "file": "Discordfy-Guia-do-Usuario-v0.1.5.epub",
+      "sha256": "89a7221a73d93931f2bfa22d6d44cf903641f72f851ae64cb335eb0a00204054"
     }
   }
 }

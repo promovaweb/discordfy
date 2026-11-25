@@ -4,9 +4,9 @@ O Discordfy envia mensagens com embeds para canais do Discord por webhook, pela 
 
 ## Conceito visual
 
-O contorno branco do Discord envolve um sino amarelo no lugar do rosto. Dois arcos sugerem a vibração do sino. Um badge vermelho com ponto branco marca a notificação. A placa Blurple identifica o serviço de destino, e o sino representa a notificação que chega ao canal. As assinaturas trazem o nome Discordfy em curvas de Manrope 750.
+Um traço branco e simples desenha o contorno do Discord, com os dois olhos cheios. No canto superior direito, um sino amarelo em traço e um ponto vermelho marcam a notificação. A placa Blurple identifica o serviço de destino, e o sino representa a mensagem que chega ao canal. As assinaturas trazem o nome Discordfy em curvas de Manrope 750.
 
-O glifo do Discord é marca da Discord Inc. O SVG usa o path do [Simple Icons 16.38.1](https://cdn.jsdelivr.net/npm/simple-icons@16.38.1/icons/discord.svg), com escala uniforme, traço sem preenchimento e máscara sobre os olhos.
+O Discord é marca da Discord Inc. O contorno é um desenho próprio, em traço de espessura única com cantos arredondados, que lembra o glifo oficial sem copiá-lo.
 
 ## Arquivos oficiais
 
@@ -49,8 +49,8 @@ node <brandfy>/skills/brandfy-design-tokens/scripts/generate-tokens.mjs \
 ## Regras para agentes
 
 1. Use os ativos desta pasta sem redesenhá-los.
-2. Use contorno branco e sino amarelo (#FEE75C) na placa Blurple.
+2. Use contorno branco, sino amarelo (#FEE75C) e ponto vermelho (#ED4245) na placa Blurple.
 3. Estado nunca depende apenas de cor: inclua texto, ícone ou posição.
 4. Use tokens semânticos e a variante correta para light ou dark mode.
-5. Sobre fundo claro, use o glifo em Blurple e a borda do sino em petróleo (#00161E). Sobre fundo escuro, use o glifo em branco. O sino mantém o amarelo nas duas variantes.
+5. Sobre fundo claro, use o contorno em Blurple e o sino amarelo com traço petróleo (#00161E). Sobre fundo escuro, use o glifo em branco. O sino mantém o amarelo nas duas variantes.
 6. Não aplique filtros, gradientes, sombras, rotações ou deformações.

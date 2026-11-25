@@ -3,7 +3,7 @@
   "opencli": "0.1",
   "info": {
     "title": "Discordfy",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "summary": "Rich Discord notifications: CLI, TUI and MCP stdio server that sends embeds to channels through webhooks saved by name.",
     "description": "Rich Discord notifications: CLI, TUI and MCP stdio server that sends embeds to channels through webhooks saved by name. Without arguments it opens the TUI; \"discordfy mcp\" starts the MCP server over stdio; any other command runs as a CLI with text or --json output.",
     "contact": {

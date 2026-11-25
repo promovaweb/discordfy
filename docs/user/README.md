@@ -10,7 +10,7 @@ IA que trabalha com você. Quando o agente termina um deploy, revisa um pull
 request ou encontra uma falha no build, ele envia uma notificação ao canal certo
 com um embed legível, sem que você copie e cole nada.
 
-Este guia acompanha a edição 0.1.4. Os exemplos usam comandos reais do
+Este guia acompanha a edição 0.1.5. Os exemplos usam comandos reais do
 binário. Cada option citada existe no `discordfy --help` da mesma versão.
 
 ## Leia online ou como ebook
@@ -19,8 +19,8 @@ Os capítulos deste diretório também formam o ebook
 **Discordfy · Guia do Usuário**. O PDF preserva a diagramação para leitura e
 impressão. O EPUB deixa você ajustar fonte e tamanho no leitor digital.
 
-- [Baixe o PDF](../../ebook/Discordfy-Guia-do-Usuario-v0.1.4.pdf).
-- [Baixe o EPUB](../../ebook/Discordfy-Guia-do-Usuario-v0.1.4.epub).
+- [Baixe o PDF](../../ebook/Discordfy-Guia-do-Usuario-v0.1.5.pdf).
+- [Baixe o EPUB](../../ebook/Discordfy-Guia-do-Usuario-v0.1.5.epub).
 - [Consulte a edição e os hashes](../../ebook/README.md).
 
 ## Percurso

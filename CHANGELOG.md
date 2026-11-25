@@ -2,6 +2,16 @@
 
 Formato baseado em Keep a Changelog. Versões seguem SemVer.
 
+## [0.1.5] - 2026-11-25
+
+### Alterado
+
+- Ícone redesenhado em traços simples: contorno próprio que lembra o
+  Discord, com olhos cheios, e um sino amarelo com ponto vermelho no canto
+  como sinal de notificação. Placa Blurple, variantes clara e escura,
+  assinaturas, favicons, PNGs e manifesto regerados.
+- Guia do usuário reconstruído na edição 0.1.5 com a capa nova.
+
 ## [0.1.4] - 2026-11-24
 
 ### Alterado
